@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+<script	src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.js"></script>
+<!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.5/css/bootstrap.min.css"> -->
+<link rel="stylesheet" href="/css/layout-mylocal.css">
+
+	<script type="text/javascript" src="angularcrud.js"></script>
+	<script type="text/javascript" src="angularcrud.service.js"></script>
+	<script type="text/javascript" src="angularcrud.controller.js"></script>
+		
+<title>AngularJS $http Rest example</title>
+
+</head>
+<body ng-app="populationEntryApp" ng-controller="populationEntryController">
+
+	<h1>AngularJS Restful web services example using $http</h1>
+	<form name="userForm" ng-submit="userForm.$valid && submitCountry()" novalidate="novalidate" >
+		<table  class="table table-bordered">
+
+			<tr>
+				<th colspan="2">Add/Edit country</th>
+			</tr>
+			<tr>
+				<td>Country</td>
+				<td>
+					<input type="text"  name="countryName"  ng-model="countryForm.countryName" required />
+					
+					<span ng-show="submitted && userForm.countryName.$invalid">Country name is required.</span>
+					
+       
+				</td>
+				
+			
+     		</tr>
+			<tr>
+				<td>Population</td>
+				<td><input type="text" name="population"  ng-model="countryForm.population" required />
+				<span ng-show="submitted && userForm.population.$invalid">Poppulation is required.</span>
+				</td>
+			</tr>
+			
+			
+			
+			
+			<tr>
+				<td colspan="2"><input type="submit" value="Submit" ng-click="submitted=true"
+					class="button" /></td>
+			</tr>
+		</table>
+	</form>
+	<table  class="table table-bordered">
+		<tr>
+
+			<th>CountryName</th>
+			<th>Population</th>
+			<th>Operations</th>
+
+		</tr>
+
+		<tr ng-repeat="country in countries">
+
+			<td>{{ country.countryName }}</td>
+			<td>{{ country.population }}</td>
+
+			<td><a ng-click="editCountry(country)" class="blue-button">Edit</a>
+				| <a ng-click="deleteCountry(country)" class="red-button">Delete</a></td>
+		</tr>
+
+	</table>
+</body>
+</html>
