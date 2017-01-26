@@ -1,0 +1,5 @@
+clean install spring-boot:run
+
+
+${workspace_loc:/Population}
+
