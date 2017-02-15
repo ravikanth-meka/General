@@ -1,0 +1,124 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+  xmlns:composite="http://java.sun.com/jsf/composite"
+  xmlns:h="http://java.sun.com/jsf/html">
+
+    <h:head>
+        <title>Apply conditional rules for given select dropdown</title>
+    </h:head>
+    <h:body>
+        <composite:interface>
+        	<composite:attribute name="selectName" required="true"/>
+            <composite:attribute name="trigger" required="true"/>
+            <composite:attribute name="operator" required="true"/>
+        </composite:interface>
+
+        <composite:implementation>
+        	<script type="text/javascript" >
+        		//<![CDATA[
+        		$(document).ready(function(){
+					$("##{cc.attrs.selectName}").find("select").on('change', function() {
+						var sIdx = $(this).attr('id').split(':')[1];
+					    var value = $(this).val();
+					    var trigger = #{cc.attrs.trigger};
+					    for (var rules =0; rules<trigger.Triggers.length;rules++)
+					    {
+					    	
+					    	var rOperator = trigger.Triggers[rules].operator;
+					    	
+					    	var rValue = trigger.Triggers[rules].value;
+					    	var actRValue = rValue.split(',');
+					    	var applyRule = false;
+					    	
+					    	if(rOperator == "notEquals" ) 
+					    	{
+						    	for (var valRules =0; valRules<actRValue.length;valRules++)
+						    	{
+						    		if	 (value!=actRValue[valRules])
+						    				applyRule = true;
+						    	}
+					    	}
+					    	if (rOperator == "equals")
+					    	{
+					    		for (var valRules =0; valRules<actRValue.length;valRules++)
+						    	{
+						    	if	 (value===actRValue[valRules])
+						    			applyRule = true;
+						    	}
+					    	} 
+					    	if (applyRule)
+					    	{
+								var dRule = trigger.Triggers[rules].disabled;
+								if (dRule!=null)   
+								for (var item =0; item<dRule.length;item++)
+								{
+									var rAction = dRule[item];
+
+									var actualGenKey = rAction.split('-');
+
+									var genKey = actualGenKey[0].split(':');
+			    					var res='';
+			    					if (genKey.length > 0)
+			    					res = '#'+genKey[0]+'\\:'+ sIdx +'\\:'+genKey[2];
+			    					
+
+			    					var genKeyAction = actualGenKey[1];
+			    					if (genKeyAction!=null)
+			    					$(res).val(genKeyAction);
+			    					else
+			    					$(res).val("");
+			    					
+			    					$(res).removeClass('required');
+			    					$(res).attr("disabled", true);
+								}
+								var eRule = trigger.Triggers[rules].enabled;
+								if(eRule != null)   
+								for (var item =0; item<eRule.length;item++)
+								{
+									var rAction = eRule[item];
+									var actualGenKey = rAction.split('-');
+									
+									var genKey = actualGenKey[0].split(':');
+			    					var res='';
+			    					if (genKey.length > 0)
+			    					res = '#'+genKey[0]+'\\:'+ sIdx +'\\:'+genKey[2];
+			    					$(res).attr("disabled", false);
+			    					
+			    					var genKeyAction = actualGenKey[1];
+			    					if (genKeyAction!=null)
+			    					$(res).val(genKeyAction);
+			    					$(res).addClass('required');
+								}
+								var hRule = trigger.Triggers[rules].hide; 
+								if (hRule != null)  
+								for (var item =0; item<hRule.length;item++)
+								{
+									var rAction = hRule[item];
+									var genKey = rAction.split(':');
+			    					var res='';
+			    					if (genKey.length > 0)
+			    					res = '#'+genKey[0]+'\\:'+ sIdx +'\\:'+genKey[2];
+			    					$(res).hide();
+								}
+								var sRule = trigger.Triggers[rules].show; 
+								if(sRule != null)  
+								for (var item =0; item<sRule.length;item++)
+								{
+									var rAction = sRule[item];
+									var genKey = rAction.split(':');
+			    					var res='';
+			    					if (genKey.length > 0)
+			    					res = '#'+genKey[0]+'\\:'+ sIdx +'\\:'+genKey[2];
+			    					$(res).show();
+								}
+					    	}
+							
+					    }
+					});
+				});
+				//]]>					
+			</script>		
+        </composite:implementation>
+    </h:body>
+</html>

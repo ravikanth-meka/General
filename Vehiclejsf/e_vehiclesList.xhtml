@@ -1,0 +1,169 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+		xmlns:ui="http://java.sun.com/jsf/facelets"
+		xmlns:h="http://java.sun.com/jsf/html"
+		xmlns:f="http://java.sun.com/jsf/core"
+		xmlns:p="http://primefaces.org/ui" 
+		xmlns:mycomp="http://mycomp.com/mycompfaces"  
+		xmlns:trigger="http://java.sun.com/jsf/composite/mycompClientTrigger" 
+		xmlns:sec="http://www.springframework.org/security/tags"
+		template="/WEB-INF/templates/sasBase_Col-12-withMainNav.xhtml">
+		
+		<ui:define name="title">ACG - Auto Unified Flow- Vehicle LookUp</ui:define>
+	
+	<ui:define name="mainNav">
+		<ui:include src="navBar.xhtml"/>
+	</ui:define>
+
+	<ui:define name="rightnav">
+		<ui:include src="rightNav.xhtml"/>
+	</ui:define>
+
+<ui:define name="content">
+     	 <ui:include src="agentPanel.xhtml"/>
+          <h:form prependId="false" id="vehicleList" class="contentWrapper">
+          <h:panelGroup id ="mainVehPanel"  >
+               <div id="vehPanel" class="panel panel-customSS2">
+                <div class="panel-heading">
+                   <span><h:commandLink action="next" styleClass="btn btn-success btn-sm panel-btn-sze pull-right">Next<i class="fa fa-arrow-right" aria-hidden="true"></i></h:commandLink></span>
+                   <span><h:commandLink action="previous" styleClass="btn btn-primary btn-sm panel-btn-sze pull-right Prev-btn"><i class="fa fa-arrow-left" aria-hidden="true"></i>Previous</h:commandLink></span>
+                 </div>
+                 
+                 <h:panelGroup id="vehiclesListPanel">
+                 <div class="panel-heading secondary-heading">Vehicles Covered<span>
+                 <h:commandLink id="addVehicle" styleClass="btn btn-primary" onclick="this.disabled=true" 
+									 		value="Add Vehicle" 
+					                    	action="showAddVehicle"  
+											tabindex="11" >
+									<f:setPropertyActionListener target="#{flowScope.vehViewName}" value="lookUp"/>
+									<f:ajax render="addEditVehiclePanel"/>
+									</h:commandLink></span></div>
+				<p:messages closable="true" showDetail="false" autoUpdate="true" />
+				<div class="table-responsive">     
+                 <table id="VehiclesListPage" class="table table-condensed tablesorter bootstrap-popup table-striped-CS_header first-th-subheader">
+                      <!-- thead>
+                          <tr class="columnTitle">
+	                          <ui:fragment id ="addVehicleBtnPanel" rendered="#{basket.policy.vehicle.size() gt 0 and basket.vehViewName != 'allView'}" > 
+		                      <th colspan="7" >
+			                      <h4>  Vehicles Covered</h4>
+		                    	 </th> 
+		                    	 <td colspan="2" class="text-right">	
+		                    	 	<span class="mycomp-label"> </span><br/>
+									 <h:commandLink id="addVehicle" styleClass="btn btn-primary pull-left" onclick="this.disabled=true" 
+									 		value="Add Vehicle" 
+					                    	action="showAddVehicle"  
+											tabindex="11" >
+									<f:setPropertyActionListener target="#{flowScope.vehViewName}" value="lookUp"/>
+									<f:ajax render="addEditVehiclePanel"/>
+									</h:commandLink>
+		                    	</td>
+		                     </ui:fragment> 
+	                    </tr>	 
+	                   
+                   	 </thead-->
+                   	 <tbody>
+                   	 		<ui:fragment rendered="#{basket.policy.vehicle.size() gt 0 }" >
+                   	 		<tr style="font-weight: bold !important;">
+		                    	<th class="text-center" >Year/Make/Model</th>
+							 	<th class="text-center" >Vehicle Id Number</th>
+                            	<th class="text-center">BI</th>
+                            	<th class="text-center">#{basket.medPipSymbol}</th>
+                            	<th class="text-center">COMP</th>
+                            	<th class="text-center">COLL</th>
+                            	<ui:fragment rendered="#{basket.vehViewName != 'allView'}" >
+                            	<th class="text-center">#{basket.pdPpiSymbol}</th>
+                            	<th ></th>
+								<th ></th>
+		                         </ui:fragment>
+		                         <ui:fragment rendered="#{basket.vehViewName == 'allView'}" >
+		                         <th  class="text-center" >#{basket.pdPpiSymbol}</th>
+                            	<th ></th>
+								<th ></th>
+                            	
+		                         </ui:fragment>
+                            </tr>
+				        	<ui:repeat var="veh" value="#{basket.policy.vehicle}" varStatus="loop">
+		                    	<tr>
+		                    	<td align="center" valign="center" >
+	                            	#{veh.mvYear} #{veh.mvMake} #{veh.mvModel} 
+								</td>
+									<td align="center" valign="center">#{veh.mvCustVin}</td>
+									<td align="center" valign="center">#{veh.mvLiabSym}</td>
+	                            	<td align="center" valign="center">#{veh.mvPipSym}</td> 	
+	                            	<td align="center" valign="center">#{veh.mvCompSym}</td>
+	                            	<td align="center" valign="center">#{veh.mvCollSym}</td>
+	                            	<td align="center" valign="center">#{veh.mvLpdSym}</td>
+		                         <td >	
+		                         <ui:fragment rendered="#{basket.vehViewName == 'allView'}" >
+		                         </ui:fragment>
+		                            <ui:fragment rendered="#{basket.vehViewName != 'allView'}" >
+							 		<h:commandLink id="vehEdit" styleClass="pencilEdit-image pull-left"  
+									 		value="" 
+					                    	action="editVehicle"  
+											tabindex="11" 
+											 title="Edit Vehicle" >
+											<f:setPropertyActionListener target="#{flowScope.vehSelected}" value="#{veh}"/>
+											<f:setPropertyActionListener target="#{flowScope.vehViewName}" value="lookUp"/>
+											<f:ajax />
+									</h:commandLink>
+									</ui:fragment>
+									</td>
+								<td >
+								<ui:fragment rendered="#{basket.vehViewName == 'allView'}" >
+		                         </ui:fragment>
+									<ui:fragment rendered="#{basket.vehViewName != 'allView'}" >
+									 <h:commandLink id="vehDelete" styleClass="cancel-image pull-left"  
+									 		value="" 
+					                    	action="decideDeleteVehicle"  
+											tabindex="11" title="Delete Vehicle">
+											 <f:setPropertyActionListener target="#{flowScope.deleteVehicleRiskSeq}" value="#{veh.formRiskSeq}" />
+											 <f:setPropertyActionListener target="#{flowScope.deleteVehicle}" value="#{veh}" />
+											<f:ajax render=":vehicleList:deleteWarning :vehicleList:notSaveWarning"/>
+									</h:commandLink>
+									</ui:fragment>
+								 </td>
+	                            </tr>
+                            </ui:repeat>
+                       </ui:fragment>
+						</tbody>                     
+                  </table>
+                  </div>
+               </h:panelGroup> 
+               <h:panelGroup id ="deleteWarning"  >
+                      <ui:fragment rendered="#{basket.showVehWarning == 'DeletingVehicle'}">
+                       <span style="color: #fd2d2d; font-size:11px;">
+                      	Warning: Your request will result in deleting vehicle, do you wish to continue #{flowScope.deleteVehicle.mvYear}
+                      	#{flowScope.deleteVehicle.mvMake} #{flowScope.deleteVehicle.mvModel} 
+                      	
+                      	</span><span class="mycomp-label"> </span><span class="mycomp-label">   </span>
+                      	<h:commandLink id="delveh" styleClass="btn btn-sm btn-primary" value="OK" action="deleteVehicle" >
+							<f:ajax render=":vehicleList:deleteWarning"/>
+						</h:commandLink>
+						<span class="mycomp-label"> </span><span class="mycomp-label">   </span>
+						<h:commandLink id="retainVeh" styleClass="btn btn-sm btn-primary" value="Cancel" action="retainInVehEdit" >
+							<f:ajax render=":vehicleList:deleteWarning"/>
+						</h:commandLink>
+                      </ui:fragment>
+               </h:panelGroup>
+			   <h:panelGroup id ="addEditVehiclePanel">
+			   <ui:fragment  rendered="#{basket.policy.vehicle.size() eq 0 or 'addVeh' == basket.vehicleAction or 'editVeh' == basket.vehicleAction}" >
+                    <ui:param name="vehSel" value="#{basket.selectedVehicle}" />
+                    		<ui:include src="editVehiclePanel.xhtml"/>
+			   </ui:fragment>
+			   </h:panelGroup>
+              <div class="panel-footer clearfix">
+	          <div class="pull-right">
+	            <h:commandLink action="next" styleClass="btn btn-success btn-sm panel-btn-sze">Next<i class="fa fa-arrow-right" aria-hidden="true"></i></h:commandLink>
+	          </div>
+	          <div class="pull-right">
+	            <h:commandLink action="previous" styleClass="btn btn-primary btn-sm panel-btn-sze Prev-btn"><i class="fa fa-arrow-left" aria-hidden="true"></i>Previous</h:commandLink>
+	          </div>
+	         </div>
+			</div>
+			</h:panelGroup>
+          </h:form>
+          
+</ui:define>	
+		
+</ui:composition>		
+
+

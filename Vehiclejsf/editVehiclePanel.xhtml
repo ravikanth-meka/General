@@ -1,0 +1,636 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+		xmlns:ui="http://java.sun.com/jsf/facelets"
+		xmlns:h="http://java.sun.com/jsf/html"
+		xmlns:f="http://java.sun.com/jsf/core"
+		xmlns:p="http://primefaces.org/ui" 
+		xmlns:mycomp="http://mycomp.com/mycompfaces"  
+		xmlns:trigger="http://java.sun.com/jsf/composite/mycompClientTrigger" 
+		xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+		xmlns:sec="http://www.springframework.org/security/tags">  
+  		     
+        
+                <table class="table table-condensed table-striped-header table-striped table-hover table-header-blue-cs first-th-subheader">
+        
+				<div id="vehLkUp-body" class="panel-body ">							
+				<div class="clearfix">              
+                       <div class="vehLookUp-header">
+                       <ui:fragment rendered="#{vehSel.vehStatus == 'add'}">
+                          
+							<h3 style="display:inline-block;">ADD Vehicle: </h3>
+							<span class="grayBkGrd">Select vehicle by year, make , model / Vehicle Identification Number(VIN)</span>
+							<!-- span class="titleShape titleShape-image"></span-->
+						 
+                          	
+                          <!-- h3>ADD Vehicle: 
+                          <span style="color: #202020; font-size:13px;">  Select vehicle by year, make , model / Vehicle Identification Number(VIN)
+                          </span></h3-->
+                       </ui:fragment>
+                       <ui:fragment rendered="#{vehSel.vehStatus == 'edit'}">
+                        
+                          <span class="">EDIT Vehicle: 
+                          <!-- span style="color: #202020; font-size:13px;">  Select vehicle by year, make , model / Vehicle Identification Number(VIN)
+                          </span--></span>
+                          <span class="textHilite">  Select vehicle by year, make , model / Vehicle Identification Number(VIN)
+                          </span>
+                          <!-- span class="titleShape titleShape-image"></span-->
+                       </ui:fragment>
+                          
+                        </div> 
+                        <h:panelGroup id ="notSaveWarning"  >
+                          <ui:fragment rendered="#{basket.showVehWarning == 'VehicleNotSaved'}">
+                           <span style="color: #fd2d2d; font-size:11px;">
+                          	Warning: Unsaved Vehicle data exists, Press OK to 'Continue Without Saving' OR Cancel to 'Retain in Vehicle Entry Screen'
+                          	</span><span class="mycomp-label"> </span><span class="mycomp-label">   </span>
+                          	<h:commandLink id="noSave" styleClass="btn btn-xs btn-primary"  
+						 		value="OK" 
+		                    	action="discardVeh" >
+								<f:ajax render="notSaveWarning"/>
+							</h:commandLink>
+							<span class="mycomp-label"> </span><span class="mycomp-label">   </span>
+							<h:commandLink id="retain" styleClass="btn btn-xs btn-primary"  
+						 		value="Cancel" 
+		                    	action="retainInVehEdit" >
+								<f:ajax render="notSaveWarning"/>
+							</h:commandLink>
+                          </ui:fragment>
+                      </h:panelGroup>
+			                          
+                      <div class="row">
+                        <div class="col=md-12">
+                        <div class="col-md-3">
+                          <label class="control-label" for="vehLookupType">Vehicle Type:</label>
+                          <div>
+							<h:selectOneMenu id="vehRiskType" 
+													value="#{vehSel.riskType}"  label="Vehicle Type" styleClass="required"
+													required="true"
+				 									requiredMessage="#{common_error_service.createUIErrorMessage('2500001')}">
+								 	<f:selectItems itemLabel="#{entry[1]}" itemValue="#{entry[0]}"
+		                          	value="#{common_mapping_service.getSupportedUiVals(basket.policy.riskState,'vehicle.types')}" var="entry"/>
+		                          	<f:ajax render="reglUtilVansYrlt1981 reglUtilVansYrMakeModelSection OthersYrMakeModelSection riskMakeDrpDwn riskModelDrpDwn vehiclesPanel overrideReorder" 
+		                          			listener="#{vehicleDisplayService.resetVehTypeDependencies(basket)}"/>
+		                          	<f:ajax render="enableRiskTypeDesc costNewEntry vehLookupPanel symbolDisplay vinDisplay"/>
+									<f:ajax render="riskYearDrpDwn" listener="#{auto_vehicleService.getAllVehicleYears(basket)}"/>
+							</h:selectOneMenu>
+						  </div>	
+                        </div>
+
+						<h:panelGroup id ="enableRiskTypeDesc"  >
+			    		<ui:fragment rendered="#{vehSel.riskType == 'REGL' or vehSel.riskType == 'UTIL' or vehSel.riskType == 'VANS' or vehSel.riskType == 'MISC' }">
+                        <div class="col-md-4">
+	                          	<label class="control-label" for="vehLookUpDescrpt">Vehicle Type Description: </label><br/>
+	                        	<div> 
+	                        	 <h:selectOneMenu id="vehLookUpDescrpt" 
+														value="#{vehSel.riskAddl}"  label="Vehicle Type Description" styleClass="#{component.valid ? '':'has-error'} required"
+														required="true"
+				 										requiredMessage="#{common_error_service.createUIErrorMessage('2500036')}">
+											 <f:selectItem itemValue="" itemLabel="SELECT" />													
+	                         				 <f:selectItems itemLabel="#{entry[1]}" itemValue="#{entry[0]}"
+	                          					value="#{common_mapping_service.getUiValuesByState('vehicle.desc.'.concat(vehSel.riskType.toLowerCase()), basket.policy.riskState)}" var="entry"/>		                         				 
+		                         		 <f:ajax render="vehiclesPanel costNewEntry" />
+				   				</h:selectOneMenu>
+				   			   </div>   	
+                         </div>
+                         </ui:fragment>
+                         </h:panelGroup>
+                        
+						 <div class="col-md-1"></div>
+                     </div>
+                     </div>
+                     <h:panelGroup id ="reglUtilVansYrMakeModelSection"  >
+                     <ui:fragment rendered="#{vehSel.riskType == 'REGL' or vehSel.riskType == 'UTIL' or vehSel.riskType == 'VANS'}">
+					<div class="row">
+                        <div class="col=md-12">
+                         <h:panelGroup id="riskYearDrpDwn">
+	                         <div class="col-md-2">
+    	                       <label class="control-label" for="vehLookUpYear">Year:  </label>
+    	                   <div>
+                           <h:selectOneMenu id="vehYear" 
+                           	value="#{vehSel.mvYear}"  label="Vehicle Year" valueChangeListener="#{vehicleDisplayService.resetMakeModel(basket)}"
+                           			styleClass="#{common_error_service.hasUIError('2500002,2502001,2599005,2599006,2599007,2502011',basket.errors) ? 'has-error':''}">
+                           			<f:selectItem itemValue="" itemLabel="SELECT" />
+									 <f:selectItems itemLabel="#{entry}" itemValue="#{entry}" 
+									  value="#{basket.vehicleYears}" var="entry"/>
+									  <f:selectItem itemEscaped="false" itemValue="1980" itemLabel="&lt;1981" />
+									   <f:ajax render="vehiclesPanel reglUtilVansYrlt1981 reglUtilVansYrgt1980 symbolDisplay vinDisplay riskMakeDrpDwn riskModelDrpDwn costNewEntry" 
+									   			listener="#{auto_vehicleService.getAllMakesByYear(vehSel.mvYear, basket)}"/>
+							</h:selectOneMenu>
+							</div>
+						</div>
+						</h:panelGroup>
+            
+            
+            		<h:panelGroup id ="reglUtilVansYrgt1980"  >
+                     <ui:fragment rendered="#{vehSel.mvYear ne 1980}">
+                        <div class="col-md-2">
+                        <h:panelGroup id="riskMakeDrpDwn">
+                         <label class="control-label" for="vehLookUpMake">Make:  </label>
+                         <div>
+                         <h:selectOneMenu id="vehMake" 
+								value="#{vehSel.mvMakeNum}"  label="Make" valueChangeListener="#{vehicleDisplayService.resetModel(basket)}"
+								styleClass="#{common_error_service.hasUIError('2500003,2599005',basket.errors) ? 'has-error':''}">
+									<f:selectItem itemValue="" itemLabel="SELECT" />
+									 <f:selectItems itemLabel="#{entry[0]}" itemValue="#{entry[2]}" 
+									  value="#{basket.vehicleMakes}" var="entry"/>
+									 <f:ajax render="symbolDisplay vinDisplay riskModelDrpDwn vehiclesPanel" listener="#{auto_vehicleService.getModelsByMakeAndYear(vehSel.mvYear,vehSel.mvMakeNum,basket)}"/>
+						</h:selectOneMenu>
+						</div>
+                          </h:panelGroup>
+                       </div>
+                        <div class="col-md-2">
+                        <h:panelGroup id="riskModelDrpDwn">
+                           <label class="control-label" for="vehLookUpModel">Model:  </label>
+                            <div>
+                        	<h:selectOneMenu id="vehModel" 
+                          		value="#{vehSel.mvModel}"  label="Model" valueChangeListener="#{vehicleDisplayService.resetVINAndSymbols(basket)}"
+                          		styleClass="#{common_error_service.hasUIError('2500004,2599005',basket.errors) ? 'has-error':''}">
+                          			<f:selectItem itemValue="" itemLabel="SELECT" />
+									 <f:selectItems itemLabel="#{entry.trim()}" itemValue="#{entry.trim()}" 
+									  value="#{basket.vehicleModels}" var="entry"/>
+									  <f:ajax render="symbolDisplay vinDisplay vehiclesPanel" listener="#{vehicleDisplayService.resetLookupList(basket)}" />
+							</h:selectOneMenu>
+							</div>
+                          </h:panelGroup>
+                        </div>
+                        </ui:fragment>
+                        </h:panelGroup>                        
+                       	<div class="col-md-1">
+	                      <label class="or">OR</label>
+	                   </div>
+	                   <div class="col-md-3">
+               			<label class="control-label" for="vin">Vehicle ID Number:</label>
+               			<h:panelGroup id="vinDisplay">
+					   <div>	 
+						<mycomp:inputText value="#{vehSel.mvCustVin}" id="custVin" 
+		 				label="VIN" upper="true"
+		 				styleClass="#{common_error_service.hasUIError('2599005,2599006,2599007,2500005',basket.errors) ? 'has-error':''} required widthAuto"
+		 				maxlength="17" valueChangeListener="#{vehicleDisplayService.resetSymbolsAndMakeDetails(basket)}">
+		 				<f:ajax  event="change" render="symbolDisplay vehiclesPanel reglUtilVansYrMakeModelSection" execute="@this" />
+						</mycomp:inputText>
+			      </div>		
+				</h:panelGroup>
+ 					
+                 </div>
+                  <h:panelGroup id="vehLookupPanel">
+                 <ui:fragment rendered="#{vehSel.mvYear ne 1980 and (vehSel.riskType == 'REGL' or vehSel.riskType == 'UTIL' or vehSel.riskType == 'VANS')}">
+                 <div class="col-md-2">
+                  <!-- div class="mycomp-label"> </div-->
+                  <label class="control-label" for="vehLookUp"></label>
+                <div>
+                   <h:commandLink id="vehLookup" styleClass="btn btn-xs btn-primary widthAuto"  
+						 		value="Lookup" 
+		                    	action="find_vehicle_by_vin" update="vehicleList"  
+								 >
+								 <f:setPropertyActionListener target="#{flowScope.vehicle}" value="#{vehSel}" />
+								 <f:setPropertyActionListener target="#{flowScope.state}" value="#{basket.policy.riskState}" />
+						<f:ajax render="vehiclesPanel costNewEntry riskYearDrpDwn riskMakeDrpDwn riskModelDrpDwn vinDisplay" execute="vehicleList"/>
+						<i class="fa fa-search lookup-fa" aria-hidden="true" title="click for Vehicle Lookup"></i>
+					</h:commandLink>
+				   </div>	
+				 </div>
+				 </ui:fragment>
+				 </h:panelGroup>
+                     </div>
+                  </div>
+                  </ui:fragment>
+                  </h:panelGroup>
+                  <h:panelGroup id ="OthersYrMakeModelSection"  >
+                     <ui:fragment rendered="#{vehSel.riskType != 'REGL' and vehSel.riskType != 'UTIL' and vehSel.riskType != 'VANS'}">
+					<div class="row">
+                        <div class="col=md-12">
+	                         <div class="col-md-2">
+    	                       <label class="control-label" for="vehLookUpYear">Year:  </label>
+    	                      <div> 
+    	                       <mycomp:inputText value="#{vehSel.mvYear}"
+    	                       required="true" 
+				 				requiredMessage="#{common_error_service.createUIErrorMessage('2502001')}"
+				 				validatorMessage="#{common_error_service.createUIErrorMessage('2502001')}" 
+				 				styleClass="#{component.valid ? '':'has-error'}" maxlength="4" 
+				 				 >
+				 				<f:validateLongRange maximum="2999" minimum="1800" />
+				 				<f:ajax/>
+							   </mycomp:inputText>
+							 </div>  
+						</div>
+            
+                        <div class="col-md-2">
+                         	   <label class="control-label" for="vehLookUpMake">Make:  </label>
+                         	  <div> 
+                         	   <mycomp:inputText value="#{vehSel.mvMake}" required="true" upper="true" 
+				 				requiredMessage="#{common_error_service.createUIErrorMessage('2500003')}" 
+				 				styleClass="#{component.valid ? '':'has-error'}" maxlength="4" 
+				 				 >
+				 				<f:ajax/>
+							   </mycomp:inputText>
+							 </div>  
+                       </div>
+                        <div class="col-md-2">
+                              <label class="control-label" for="vehLookUpModel">Model:</label>
+	                         <div>
+	                          <mycomp:inputText value="#{vehSel.mvModel}"  upper="true" 
+	                          	required="true"
+				 				requiredMessage="#{common_error_service.createUIErrorMessage('2500004')}" 
+				 				styleClass="#{component.valid ? '':'has-error'}" maxlength="19" 
+				 				 >
+				 				<f:ajax/>
+							  </mycomp:inputText>
+							 </div> 
+                        </div>
+                      </div>
+                  </div>
+                  </ui:fragment>
+                  </h:panelGroup>
+                  
+                  <h:panelGroup id ="reglUtilVansYrlt1981"  >
+                     <ui:fragment rendered="#{vehSel.mvYear eq 1980 and (vehSel.riskType == 'REGL' or vehSel.riskType == 'UTIL' or vehSel.riskType == 'VANS')}">
+					<div class="row">
+                        <div class="col=md-12">
+	                      <div class="col-md-2">
+    	                       <label class="control-label" for="vehLookUpYear">Actual Year:  </label>
+    	                      <div>
+    	                       <mycomp:inputText  value="#{basket.mvYearSubstitute}" label="Actual Year"
+				 				requiredMessage="#{common_error_service.createUIErrorMessage('2502011')}" 
+				 				validatorMessage="Actual Year should be between 1800 and 1981"
+				 				styleClass="#{component.valid ? '':'has-error'}" maxlength="4" required="true"
+				 				>
+				 				 <f:validateLongRange maximum="1980" minimum="1800" />
+				 				 <f:ajax/>
+							   </mycomp:inputText>
+							  </div> 
+						 </div>
+            
+                         <div class="col-md-2">
+                         	   <label class="control-label" for="vehLookUpMake">Make:  </label>
+                        	  <div> 
+                         	   <mycomp:inputText value="#{vehSel.mvMake}" upper="true"
+				 				requiredMessage="#{common_error_service.createUIErrorMessage('2500003')}" 
+				 				styleClass="#{component.valid ? '':'has-error'}" maxlength="4" 
+				 				 >
+				 				<f:ajax/>
+							   </mycomp:inputText>
+							 </div>  
+                        </div>
+                        <div class="col-md-2">
+                              <label class="control-label" for="vehLookUpModel">Model:  </label>
+	                        <div> 
+	                          <mycomp:inputText value="#{vehSel.mvModel}" upper="true"
+				 				requiredMessage="#{common_error_service.createUIErrorMessage('2500004')}" 
+				 				styleClass="#{component.valid ? '':'has-error'}" maxlength="19" 
+				 				 >
+				 				<f:ajax/>
+							  </mycomp:inputText>
+							</div>  
+                        </div>
+                      </div>
+                  </div>
+                  </ui:fragment>
+                  </h:panelGroup>
+                  
+  				<h:panelGroup id="symbolDisplay">
+  					<ui:fragment rendered="#{vehSel.riskType == 'REGL' or vehSel.riskType == 'UTIL' or vehSel.riskType == 'VANS' }">
+						<div class="row">
+						<div class="col-md-12">
+                      	 		<span class="vehInfo vinSymbol"> 	BI: #{vehSel.mvLiabSym}<span class="vinInfo"></span>
+                          	#{basket.medPipSymbol}: #{vehSel.mvPipSym} <span class="vinInfo"></span>	
+                           	COMP: #{vehSel.mvCompSym}<span class="vinInfo"></span>
+                           	COLL: #{vehSel.mvCollSym}<span class="vinInfo"></span>
+                           	#{basket.pdPpiSymbol}: #{vehSel.mvLpdSym}<span class="vinInfo"></span>
+                           	
+                           	Cylinders : #{vehSel.mvEngCycls}<span class="vinInfo"></span>
+							</span>
+						</div>
+						</div>
+					</ui:fragment>
+					
+				<div class="row">
+				
+                <ui:fragment rendered="#{vehSel.riskType != 'REGL' and vehSel.riskType != 'UTIL' and vehSel.riskType != 'VANS' 
+                					and vehSel.riskType != 'SNOW' and vehSel.riskType != 'MISC' and vehSel.riskType != 'UTRL' and vehSel.riskType != 'RTRL'}">
+                <div class="col-md-3">
+			    <label class="control-label"> Body Style : </label> 
+			    			<h:selectOneMenu tabindex="9" id="bodyType" 
+													value="#{vehSel.mvBodyType}"
+													styleClass="#{component.valid ? '':'has-error'} required"  
+													required="true"
+													requiredMessage="#{common_error_service.createUIErrorMessage('2500032')}"
+																		disabled="#{vehSel.riskType == 'MTHM'}">
+								 <f:selectItem itemValue="" itemLabel="SELECT" />
+								 <f:selectItems itemLabel="#{entry[1]}" itemValue="#{entry[0]}"
+		                          value="#{common_mapping_service.getUiValuesByStateAndSubCoy('bodyStyles',basket.policy.riskState,basket.policy.subCoy)}" var="entry"/>
+		                          <f:ajax/>
+							</h:selectOneMenu>
+					</div>
+				</ui:fragment>
+		
+				 
+                <ui:fragment rendered="#{vehSel.riskType != 'SNOW' and  vehSel.riskType != 'ANTQ' and vehSel.riskType != 'MISC' and vehSel.riskType != 'UTRL' and vehSel.riskType != 'RTRL'}">
+                <div class="col-md-3">
+                       <label class="control-label">Airbag Type:</label>
+                      <div>  
+                      <h:selectOneMenu tabindex="9" id="airbag" 
+										value="#{vehSel.mvRestrnt}" >
+										 <f:selectItem itemValue="" itemLabel="SELECT" />
+										 <f:selectItems itemLabel="#{entry[1]}" itemValue="#{entry[0]}"
+				                          value="#{common_mapping_service.getUiValuesByStateAndSubCoy('vehicle.Airbag',basket.policy.riskState,basket.policy.subCoy)}" var="entry"/>
+				                          <f:ajax/>
+					</h:selectOneMenu>
+					</div>
+				</div>								
+				</ui:fragment>
+				
+				
+				<ui:fragment rendered="#{vehSel.riskType != 'SNOW' and  vehSel.riskType != 'ANTQ' and vehSel.riskType != 'MISC' and vehSel.riskType != 'UTRL' and vehSel.riskType != 'RTRL'}">
+			    <div class="col-md-4">
+                     <label class="control-label">ABS Type:</label>
+                         <div>
+                  		<h:selectOneMenu tabindex="9" id="abs" 
+						value="#{vehSel.mvAntiLoc}" 
+						styleClass="#{common_error_service.hasUIError('2500052',basket.errors) ? 'has-error':''} required">
+						 <f:selectItem itemValue="" itemLabel="SELECT" />
+						 <f:selectItems itemLabel="#{entry[1]}" itemValue="#{entry[0]}"
+                          value="#{common_mapping_service.getUiValuesByStateAndSubCoy('vehicle.AntiLockBrake',basket.policy.riskState,basket.policy.subCoy)}" var="entry"/>
+                          <f:ajax/>
+						</h:selectOneMenu>
+					</div>	
+				</div>
+				</ui:fragment>
+				
+				
+				<ui:fragment rendered="#{vehSel.riskType != 'SNOW' and  vehSel.riskType != 'ANTQ' and vehSel.riskType != 'MISC' and vehSel.riskType != 'UTRL' and vehSel.riskType != 'RTRL'}">
+				 <div class="col-md-2">
+				 <label class="control-label">Anti-Theft Device:</label>
+                      <div>
+						<h:selectOneMenu tabindex="9" id="antitheft" 
+								value="#{vehSel.antiTheft}"  
+								styleClass="#{component.valid ? '':'has-error'}" >
+						 <f:selectItem itemValue="" itemLabel="SELECT" />
+						 <f:selectItems itemLabel="#{entry[1]}" itemValue="#{entry[0]}"
+						 value="#{common_mapping_service.getSupportedUiVals('vehicle.antitheft.device',basket.policy.riskState,basket.policy.subCoy,'ALL')}" var="entry"/>
+                          <f:ajax/>
+						</h:selectOneMenu>
+					</div>	
+				</div>
+				</ui:fragment>	
+				
+				 <h:panelGroup id="overrideReorder">
+					 <ui:fragment rendered="#{basket.policy.riskState != 'MI' and (vehSel.riskType == 'REGL' or vehSel.riskType == 'UTIL' or vehSel.riskType == 'VANS') 
+					 							and vehicleDisplayService.canReorderandOverrideVHL(basket)}">
+					 	<div class="col-md-2">
+		               	<label class="control-label" for="overrideReorder">Override/Reorder:</label>
+		               	   <div>
+							<h:selectOneMenu id="VhlOrder" 
+									value="#{vehSel.vhlOrderReorder}"  label="Overrider/Reorder" required="false">
+										<f:selectItem itemValue="" itemLabel="SELECT" />			
+										<f:selectItems itemLabel="#{entry[1]}" itemValue="#{entry[0]}"
+		                          			value="#{common_mapping_service.getUiValuesByMappingKey('vhlOption')}" var="entry"/>
+		                          		<f:selectItem itemValue="order" itemLabel="ORDER" />
+									  <f:ajax/>
+							</h:selectOneMenu>
+						   </div>	
+		                 </div>
+		             </ui:fragment>
+				 </h:panelGroup>
+				</div>
+					
+				</h:panelGroup>				
+					<ui:include src="vehiclesPanel.xhtml">
+ 				  	  </ui:include>						
+				</div>
+				</div>
+				
+				<h:panelGroup id="costNewEntry">
+				 
+				  <div class="row">
+				  <div class="col-md-12">
+				  	<div class="col-md-2">
+				  	
+				  <ui:fragment rendered="#{(vehSel.mvYear eq '1980' and (vehSel.riskType == 'REGL' or vehSel.riskType == 'UTIL' or vehSel.riskType == 'VANS')) or 
+				  (vehSel.riskType == 'MTHM' or vehSel.riskType == 'SNOW' or vehSel.riskType == 'RTRL' or vehSel.riskType == 'UTRL' or vehSel.riskType == 'MISC')
+				  or (vehSel.riskType == 'REGL' and vehSel.riskAddl == 'A' and (basket.showCostNew == 'true')) }">
+                        <label class="control-label" for="costNew">Cost New:</label>
+                   </ui:fragment>
+				  <ui:fragment rendered="#{(vehSel.riskType == 'ANTQ') or (vehSel.riskType == 'REGL' and (vehSel.riskAddl == 'B' or vehSel.riskAddl == 'C'))
+				   or (vehSel.riskType == 'VANS' and vehSel.riskAddl == 'A') or 
+				  (vehSel.riskType == 'UTIL' and (vehSel.riskAddl == 'B' or vehSel.riskAddl == 'C'))}">
+                        <label class="control-label" for="currenttNew">Current Value:</label>
+                   </ui:fragment>                        
+                        
+                        
+				  <ui:fragment rendered="#{(vehSel.mvYear eq '1980' and (vehSel.riskType == 'REGL' or vehSel.riskType == 'UTIL' or vehSel.riskType == 'VANS')) or 
+				  (vehSel.riskType == 'MTHM' or vehSel.riskType == 'ANTQ' or vehSel.riskType == 'SNOW' or vehSel.riskType == 'RTRL' or vehSel.riskType == 'UTRL' or vehSel.riskType == 'MISC')
+				  or (vehSel.riskType == 'REGL' and (vehSel.riskAddl == 'B' or vehSel.riskAddl == 'C')) or (vehSel.riskType == 'VANS' and vehSel.riskAddl == 'A') or 
+				  (vehSel.riskType == 'UTIL' and (vehSel.riskAddl == 'B' or vehSel.riskAddl == 'C')) 
+				  or (vehSel.riskType == 'REGL' and vehSel.riskAddl == 'A' and (basket.showCostNew == 'true'))}">
+                       	<mycomp:inputText value="#{vehSel.mvCostNew}"  id="costnewVal"
+			  				label="costNew" maxlength="6"  
+			  				styleClass="#{component.valid ? '':'has-error'} #{common_error_service.hasUIError('2500007,2507001,2507002,2507004',basket.errors) ? 'has-error':''} required" 
+			  				valueChangeListener="#{vehicleDisplayService.resetSymbols(basket)}"
+			  				validatorMessage= "#{common_error_service.createUIErrorMessage('2507002')}">
+			  				<f:validateLength minimum="3" maximum="6" />
+			  				<f:validator validatorId="com.mycomp.arch.jsf.NumberValidator"/>
+			  				<f:ajax render="costnewVal symbolDisplay"/>
+	  					</mycomp:inputText>
+	  				</ui:fragment>
+	  				</div>
+
+	  			<ui:fragment rendered="#{(vehSel.mvYear eq '1980' and (vehSel.riskType == 'REGL' or vehSel.riskType == 'UTIL' or vehSel.riskType == 'VANS')) or 
+	  			  (vehSel.riskType == 'REGL' and (vehSel.riskAddl == 'B' or vehSel.riskAddl == 'C')) or (vehSel.riskType == 'VANS' and vehSel.riskAddl == 'A') or 
+				  (vehSel.riskType == 'UTIL' and (vehSel.riskAddl == 'B' or vehSel.riskAddl == 'C'))
+				  or (vehSel.riskType == 'REGL' and vehSel.riskAddl == 'A' and (basket.showCostNew == 'true')) }">
+                     <div class="col-md-2">
+                        <span class="mycomp-label"> </span><br/>
+	                    <h:commandLink id="calcSymbol" styleClass="btn btn-xs btn-success"  
+								 		value="Calculate Symbol"
+								 		action="reqCalcSymbols"  
+				                    	 execute="@this">
+				                    	 <f:setPropertyActionListener target="#{flowScope.vehicle}" value="#{vehSel}" />
+				                    	 <i class="fa fa-calculator lookup-fa" aria-hidden="true"></i>
+						</h:commandLink>
+					 </div>
+				</ui:fragment>
+				<div class="col-md-offset-8"></div>
+				</div>
+				</div>
+				</h:panelGroup>
+				
+				<h:panelGroup id ="ipQuestion"  >
+			    <div class="row">	
+                     <div class="col-md-12">
+	                 	<div class="col-md-3">
+                        <label class="control-label">Is there an Interested Party?</label>
+	                      <div>
+	                      <h:selectOneMenu id="addIp" 
+								 value="#{vehSel.ipExistInd}"  
+								 requiredMessage="#{common_error_service.createUIErrorMessage('2500028')}" styleClass="fldSizeSm" >
+					 		<f:selectItem itemValue="" itemLabel="Select" />
+					 		<f:selectItem itemValue="Y" itemLabel="Yes" />
+							<f:selectItem itemValue="N" itemLabel="No" />
+							<f:ajax render=":vehicleList:mainVehPanel ipDetailsType ipCmd intPartiesOnVehicle addEditIP" listener="#{vehicleDisplayService.modifyInterestedParty(basket)}"/>
+						</h:selectOneMenu>
+						</div>
+						</div>
+						
+						<h:panelGroup id="ipDetailsType">
+						<ui:fragment rendered="#{basket.ipAction ne 'editIp' and basket.ipAction ne 'addIp'}">	
+							<ui:fragment rendered="#{vehSel.ipExistInd == 'Y' and vehSel.interestedParty.size() lt 2 and basket.ipAction ne 'addmoreIp'}">
+								<div class="col-md-3"><label for="ipType">Type: </label> <h:selectOneMenu
+									id="ipTypeNew" value="#{basket.searchPartyType.formTypeOfClient}"
+									label="clientType">
+									<f:selectItem itemValue="" itemLabel="Select" />
+									<f:selectItem itemValue="L" itemLabel="Leaseholder" />
+									<f:selectItem itemValue="T" itemLabel="Lienholder" />
+									<f:selectItem itemValue="F-I"
+										itemLabel="Additional Interest - Person" />
+									<f:selectItem itemValue="F-K"
+										itemLabel="Additional Interest - Company" />
+									<f:ajax render="compNamePanel ipPersonPanel ipAddressDetails" />
+								</h:selectOneMenu></div>
+		
+							</ui:fragment>
+						</ui:fragment>
+						</h:panelGroup>
+						
+						<h:panelGroup id ="ipCmd"  >
+						<div class="col-md-2 pull-right">
+						<span class="mycomp-label"> </span><br/>
+						 <ui:fragment rendered="#{vehSel.interestedParty.size() lt 2 and basket.ipAction eq 'addmoreIp'}">
+						                    <h:commandLink id="addAnotherIp" styleClass="btn btn-xs btn-primary"  
+												 		value="Add Ip" 
+								                    	action="add_another_ip"  
+														 
+														immediate="true">
+											</h:commandLink>
+						 </ui:fragment>
+						 </div>
+						 </h:panelGroup>
+					</div>
+					</div>
+					
+					<div class="row">
+				    <div class="col-md-5">
+			 		<ui:fragment rendered="#{vehSel.interestedParty.size() eq 2}">
+			 			<span style="color: #fd2d2d; font-size:9px;">
+			 				No more interested parties can be added to this Risk.
+			 			</span>
+			 		</ui:fragment>
+			 		</div>
+			 		</div>
+				</h:panelGroup>	
+				
+				
+			
+			<h:panelGroup id ="ipDetails"  >
+			 	   <h:panelGroup id ="addEditIP"  >
+	                   <ui:fragment rendered="#{vehSel.ipExistInd == 'Y'}">
+                             	 <ui:include src="interestedParty.xhtml">
+                             		 <ui:param name="basket" value="#{basket}" />
+                             	 </ui:include>
+                        </ui:fragment>
+				   </h:panelGroup>
+			</h:panelGroup>
+			
+ <h:panelGroup id="intPartiesOnVehicle">
+				<ui:fragment rendered="#{vehSel.interestedParty.size() gt 0}">
+				  <h:dataTable value="#{vehSel.interestedParty}" var="iparty" binding="#{table}"  styleClass="table-striped table-bordered">
+				  
+			  			<h:column>	<f:facet name="header">Name</f:facet>
+			  			#{iparty.surname} #{iparty.firstName}
+			  			</h:column>
+			  			<h:column>	<f:facet name="header">Address</f:facet>
+			  			#{iparty.address.streetNo} #{iparty.address.street} 
+			  			#{common_mapping_service.getUiValuesByKeyAndCodeAndState('addressInd',iparty.address.addrInd1,'IL')} #{iparty.address.addrNo1} 
+ 		  			    #{iparty.address.city}   #{iparty.address.state} #{iparty.address.postCode}
+			  			</h:column>
+			  			<h:column>	<f:facet name="header">Type</f:facet>#{vehicleDisplayService.decodeIpType(iparty)}</h:column>
+			  			<h:column>	<f:facet name="header">Reference No:</f:facet>#{iparty.refNo}</h:column>
+			  			<h:column>
+				  			 <h:commandLink id="ipDelete" styleClass="btn btn-xs btn-primary"  
+										 		value="Delete" 
+						                    	action="deleteIp" >
+							 <f:setPropertyActionListener target="#{flowScope.vehicleSelected}" value="#{vehSel}" />
+							 <f:setPropertyActionListener target="#{flowScope.deleteIpIndex}" value="#{table.rowIndex}" />
+							<f:ajax />
+						</h:commandLink>
+						</h:column>
+  				</h:dataTable>
+			   </ui:fragment>
+</h:panelGroup>
+				   
+				   
+
+			
+
+				 <h:panelGroup id ="altGargQues"  >
+			    	<div class="row">
+			    		<div class="col-md-12">
+	                 	<div class="col-md-5">	
+                        <label class="control-label">Alternate Garage Location?</label>
+                        <div>
+						<h:selectOneMenu id="altGarage" 
+										 value="#{vehSel.altGarageExists}" styleClass="fldSizeSm">
+							 		<f:selectItem itemValue="Y" itemLabel="Yes" />
+									<f:selectItem itemValue="N" itemLabel="No" />
+									<f:ajax render="altGaragePanel" listener="#{vehicleDisplayService.resetAddressDependencies(basket)}"/>
+						</h:selectOneMenu>
+						</div>
+						</div>
+						</div>
+						</div>
+		       </h:panelGroup>
+	
+				<h:panelGroup id ="altGargDetails"  >
+				<div class="row">
+			    	<div class="col-md-12">
+	                	
+ 				     <h:panelGroup id ="altGaragePanel" >
+	                     <ui:fragment rendered="#{'Y' == vehSel.altGarageExists}" >
+	                     <div class="col-md-12">
+                        	 <ui:include src="address.xhtml">
+	                        	 <ui:param name="addr" value="#{basket.selectedAddress}" />
+	                        	 <ui:param name="addrType" value="GA" />
+	                        	 <ui:param name="formName" value="vehicleList" />
+                       		 </ui:include>
+                       	</div>
+                        </ui:fragment>
+				  	 </h:panelGroup>
+				   </div>
+				   </div>
+			   </h:panelGroup>
+
+			<h:panelGroup id="saveCancelPanel">
+			<ui:fragment rendered="#{basket.searchPartyType eq null and (basket.vehicleLookupResults eq null)}">
+			<div class="row">
+			   	<div class="col-md-12">			   	
+			   	<div class="col-md-1">
+					 <h:commandLink id="saveVehicle" styleClass="btn btn-xs btn-success" action="save_vehicle"
+											 		value="Save " 
+													 title="Save Vehicle" update="vehicleList">
+							<f:setPropertyActionListener target="#{flowScope.vehicle}" value="#{vehSel}" />
+							<f:setPropertyActionListener target="#{flowScope.garageAddress}" value="#{basket.selectedAddress}" />
+							<f:ajax render="addEditVehiclePanel symbolDisplay" execute="vehicleList"/>
+							<i class="fa fa-floppy-o lookup-fa" aria-hidden="true" title="click to save vehicle"></i>
+					</h:commandLink>
+			   </div>
+			   <div class="col-md-1">
+					<h:commandLink id="cancelVehicle" styleClass="btn btn-xs btn-danger"  
+						 		value="Cancel " 
+		                    	action="cancelVehicle"  
+								 title="Cancel" >
+								 <f:setPropertyActionListener target="#{flowScope.vehicle}" value="#{vehSel}" />
+						<f:ajax />
+						<i class="fa fa-times lookup-fa" aria-hidden="true" title="Cancel add/edit vehicle"></i>
+				 	</h:commandLink>
+				</div>
+				<div class="col-md-10"></div>
+			</div>
+			</div>
+			</ui:fragment>
+		</h:panelGroup>
+			<div class="row">
+			   	<div class="col-md-12">
+			   	<span class="mycomp-label"> </span><br/>
+			   	</div>
+			</div>
+			
+			</table>
+			
+			</ui:composition>

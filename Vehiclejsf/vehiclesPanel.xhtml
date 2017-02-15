@@ -1,0 +1,95 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+		xmlns:ui="http://java.sun.com/jsf/facelets"
+		xmlns:h="http://java.sun.com/jsf/html"
+		xmlns:f="http://java.sun.com/jsf/core"
+		xmlns:p="http://primefaces.org/ui" 
+		xmlns:mycomp="http://mycomp.com/mycompfaces"  
+		xmlns:trigger="http://java.sun.com/jsf/composite/mycompClientTrigger" 
+		xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+		xmlns:sec="http://www.springframework.org/security/tags">  
+		
+<h:panelGroup id="vehiclesPanel">
+	<div class="roll">
+		<ui:fragment rendered="#{basket.vehicleLookupResults.size() eq 0}">
+		<div class="panel-heading">
+		<span class="text-default"><strong>Vehicle(s)</strong><span class="pull-right">
+			No vehicles found
+			</span>
+		</span>
+		</div>
+		</ui:fragment>
+		<ui:fragment rendered="#{basket.vehicleLookupResults.size() gt 0}">
+		<div class="panel-heading">
+		<span class="text-default vertical-align: middle;"><strong>Vehicle(s)</strong>
+			<span class="pull-right vertical-align: middle;">
+				The search returned #{basket.vehicleLookupResults.size()} vehicles(s) 
+				<h:commandLink id="vehNotListed" styleClass="btn btn-sm btn-primary"  
+								 		value="Vehicle Not Listed"
+								 		action="resetLookupList" render="vehiclesPanel costNewEntry"
+								 		tabindex="7" execute="@this">
+								 		<f:setPropertyActionListener target="#{flowScope.vehicle}" value="#{vehSel}" />
+				</h:commandLink>
+			</span>
+		</span>
+			</div>
+		</ui:fragment>
+
+		<ui:fragment rendered="#{basket.vehicleLookupResults.size() gt 0}">
+		 <div class="panel-body">
+		  <h:dataTable value="#{basket.vehicleLookupResults}" var="vehRes"   styleClass="table-striped table-bordered">
+	  			<h:column>	<f:facet name="header">Year/Make/Model</f:facet>
+	  			<h:commandLink value="#{vehRes.mvYear} #{vehRes.mvMake} #{vehRes.mvModel}" action="accept_vehicle" render ="addEditVehiclePanel" >
+					<f:setPropertyActionListener target="#{flowScope.vehSelected}" value="#{vehRes}"/>
+					<f:ajax/>
+	     		</h:commandLink>
+	  			</h:column>
+	  			<h:column>	<f:facet name="header">VinNumber</f:facet>#{vehRes.mvVehcde}</h:column>
+	  			<h:column>	<f:facet name="header">Cylinder</f:facet>#{vehRes.mvEngCycls}</h:column>
+	  			<h:column>	<f:facet name="header">AvgHP</f:facet>#{vehRes.avgHorse}</h:column>
+				</h:dataTable>
+ 		</div>	
+	   </ui:fragment>
+	   
+	   <ui:fragment rendered="#{basket.vehicleLookupResults.size() eq 0 and basket.correctedVehicle == null}">
+	    <div class="panel-body">
+	   <div align="center">
+	   		<span style="color: #fd2d2d; font-size:10px;" >
+	   				<b>Vehicle Not Listed </b><br/>
+	   
+	   				Review VIN for accuracy.  If new model year look-up by Make  Model.  
+					Call (313) 336-1496 or (877) 534-5086 for additional Symbol assistance.
+					<h:commandLink id="vehNotListedOK" styleClass="btn btn-sm btn-primary"  
+								 		value="OK"
+								 		action="resetLookupList" render="vehiclesPanel costNewEntry"
+								 		execute="@this">
+								 		<f:setPropertyActionListener target="#{flowScope.vehicle}" value="#{vehSel}" />
+					</h:commandLink>
+				</span>
+		</div>
+		</div>
+	   </ui:fragment>
+	   <ui:fragment rendered="#{basket.vehicleLookupResults.size() eq 0 and basket.correctedVehicle != null}">
+	    <div class="panel-body">
+	   <div align="center">
+	   		<span style="color: #fd2d2d; font-size:10px;" >
+	   				<b>Vehicle Not listed </b><br/>
+		
+			   <h:dataTable value="#{basket.correctedVehicle}" var="correctedVeh"   styleClass="table-striped table-bordered">
+	  			<h:column>	<f:facet name="header">Year/Make/Model</f:facet>
+	  			<h:commandLink value="#{correctedVeh.mvYear} #{correctedVeh.mvMake} #{correctedVeh.mvModel}" action="accept_vehicle" render ="addEditVehiclePanel" >
+					<f:setPropertyActionListener target="#{flowScope.vehSelected}" value="#{correctedVeh}"/>
+					<f:ajax/>
+	     		</h:commandLink>
+	  			</h:column>
+	  			<h:column>	<f:facet name="header">VinNumber</f:facet>#{correctedVeh.mvVehcde}</h:column>
+	  			<h:column>	<f:facet name="header">Cylinder</f:facet>#{correctedVeh.mvEngCycls}</h:column>
+	  			<h:column>	<f:facet name="header">AvgHP</f:facet>#{correctedVeh.avgHorse}</h:column>
+				</h:dataTable>
+	  
+				</span>
+		</div>
+		</div>
+	   </ui:fragment>
+	</div>
+</h:panelGroup>
+</ui:composition>              

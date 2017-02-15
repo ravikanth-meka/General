@@ -1,0 +1,773 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+		xmlns:ui="http://java.sun.com/jsf/facelets"
+		xmlns:h="http://java.sun.com/jsf/html"
+		xmlns:f="http://java.sun.com/jsf/core"
+		xmlns:p="http://primefaces.org/ui" 
+		xmlns:mycomp="http://mycomp.com/mycompfaces"
+		xmlns:trigger="http://java.sun.com/jsf/composite/mycompClientTrigger"  
+		xmlns:sec="http://www.springframework.org/security/tags"
+		template="/WEB-INF/templates/sasBase_Col-12-withMainNav.xhtml"
+		xmlns:fn="http://java.sun.com/jsp/jstl/functions">
+		
+		<ui:define name="title">ACG - Auto Unified Flow- All View Vehicle</ui:define>
+	
+	<ui:define name="mainNav">
+		<ui:include src="navBar.xhtml"/>
+	</ui:define>
+
+	<ui:define name="rightnav">
+		<ui:include src="rightNav.xhtml"/>
+	</ui:define>
+
+	<ui:define name="content">
+ 
+             <div id="VehicleMain" class="contentWrapper">
+             <ui:include src="agentPanel.xhtml"/>
+              <!-- Begin page Content -->
+			<h:form id="vehicleForm" prependId="false">
+                
+               <div id="vehicleAllViewPanel" class="panel panel-customSS2">
+                <div class="panel-heading">
+                	<button id="popover" type="button" class="viewVehicles-button btn btn-xs btn-success">
+	                  View Vehicles<i class="fa fa-search viewVehicles-fa" aria-hidden="true" title="click to view/select vehicles"></i>
+	                </button>
+                   <span><h:commandLink action="next" styleClass="btn btn-success btn-sm panel-btn-sze pull-right">Next<i class="fa fa-arrow-right" aria-hidden="true"></i></h:commandLink></span>
+                   <span><h:commandLink action="previous" styleClass="btn btn-primary btn-sm panel-btn-sze pull-right Prev-btn"><i class="fa fa-arrow-left" aria-hidden="true"></i>Previous</h:commandLink></span>
+                 </div>
+               
+                <div class="panel-body">  
+                  <p:messages closable="true" showDetail="false" autoUpdate="true" />
+                  
+                 
+                  
+                  <div class="col-md-12">
+                  	<div class="hidden">
+                      <div id="popover-target"></div>
+                    </div>
+                  <table id="VehiclePage" class="setMinWidth tablesorter bootstrap-popup">
+                        <thead>
+                          <tr class=""> <!-- Column titles -->
+                          	<th data-sorter="false" class="noTitle titleBarSze" data-priority="critical">
+	                        	<!-- div>
+	                            	<button id="popover" type="button" class="btn btn-xs btn-default">
+	                    				View Vehicles
+	                    			</button>
+	                    		</div-->
+	                    		<div>
+	                    			 <h:commandLink id="addVehicle" styleClass="btn-xs btn btn-primary pull-left" onclick="this.disabled=true" 
+									 		value="Add Vehicle" 
+					                    	action="showAddVehicle"  
+											tabindex="11" ><i class="fa fa-plus viewVehicles-fa" aria-hidden="true"></i>
+									<f:setPropertyActionListener target="#{flowScope.vehViewName}" value="allView"/>
+									<f:ajax />
+									</h:commandLink>
+	                    		</div>
+	                    	</th> <!-- Div prevents collapsing of tables, keeps them readable -->
+	                    	
+	                    	<ui:repeat var="veh" value="#{basket.policy.vehicle}" varStatus="vehCount">
+                            	<th data-sorter="false" data-priority="#{vehCount.index + 1}" >
+                            	
+                            	#{veh.mvYear} , #{veh.mvMake} , #{veh.mvModel} 
+								<br/>
+								VIN: #{veh.mvCustVin}
+								
+								<h:commandLink id="vehEdit" styleClass="pencilEdit-image pull-right"  
+									 		value="" 
+					                    	action="editVehicle">
+											<f:setPropertyActionListener target="#{flowScope.vehSelected}" value="#{veh}"/>
+											<f:setPropertyActionListener target="#{flowScope.vehViewName}" value="allView"/>
+											<f:ajax />
+								</h:commandLink>
+								</th>
+                          	</ui:repeat>
+    					</tr>
+                      </thead>
+                      
+                   
+                      <h:panelGroup id="mainpanel">
+                        <tbody>
+ 				                  <tr class="section-title">
+					                      <th colspan="#{basket.policy.vehicle.size() + 1}">
+					                        Vehicle Information 
+					                      </th>
+				                  </tr>
+				                  <tr>
+				                  	<th valign="top">Vehicle Type/ Description</th>
+				                  	 <ui:repeat var="veh" value="#{basket.policy.vehicle}">
+				                  	 	<td>
+				                  	 	#{common_mapping_service.getUiValuesByKeyAndCodeAndState('vehicle.types',veh.riskType,basket.policy.riskState)}
+				                  	 	<ui:fragment rendered="#{veh.riskType == 'REGL' or veh.riskType == 'UTIL' or veh.riskType == 'VANS' or veh.riskType == 'MISC' }">
+			                       				/ #{common_mapping_service.getUiValuesByKeyAndCodeAndState('vehicle.desc.'.concat(veh.riskType.toLowerCase()),veh.riskAddl, basket.policy.riskState)}
+			                       		</ui:fragment>
+				                  	 	
+				                  	 	
+				                  	 	</td>
+				                  	 </ui:repeat>
+				                  </tr>
+						        <tr>
+		                          	<th valign="top">Symbols</th>
+			                    	<ui:repeat var="veh" value="#{basket.policy.vehicle}" >
+		                            	<td>
+		                            	<ui:fragment rendered="#{veh.riskType == 'REGL' or veh.riskType == 'UTIL' or veh.riskType == 'VANS'}">
+										<span style="color: #202020; font-size:11px; font-weight:normal">
+										<b>BI: </b>#{veh.mvLiabSym}
+										<b>#{basket.medPipSymbol}: </b>#{veh.mvPipSym}
+										<b>COMP: </b>#{veh.mvCompSym}<br/>
+										<b>COLL: </b>#{veh.mvCollSym}
+										<b>#{basket.pdPpiSymbol}: </b>#{veh.mvLpdSym}
+										</span>
+										</ui:fragment>
+										</td>
+		                          	</ui:repeat>
+		                          
+		                       </tr>
+				                  
+				                   <tr><th valign="top">Vehicle History Level</th>
+			                       <ui:repeat var="veh" value="#{basket.policy.vehicle}"><td>
+	 									<!-- #{veh.vehicleHistory.vhlLevel}  -->
+	 										#{vehicleDisplayService.displayVhlInfo(veh,basket)}
+										</td>
+				                  	 </ui:repeat>
+			                      </tr>
+				                  <tr><th valign="top">Cylinders</th>
+			                       <ui:repeat var="veh" value="#{basket.policy.vehicle}"><td>
+	 									#{veh.mvEngCycls}
+										</td>
+				                  	 </ui:repeat>
+			                      </tr>
+			                     
+			                       <tr><th valign="top">Body Style</th>
+			                       
+			                        
+			                       <ui:repeat var="veh" value="#{basket.policy.vehicle}"><td>
+			                       <ui:fragment rendered="#{veh.riskType != 'REGL' and veh.riskType != 'UTIL' and veh.riskType != 'VANS' 
+			                       					and veh.riskType != 'SNOW' and veh.riskType != 'MISC' and veh.riskType != 'UTRL' and veh.riskType != 'RTRL'}">
+			                       		#{veh.mvBodyType}
+											</ui:fragment>
+										</td>
+				                  	 </ui:repeat>
+				                  	
+			                      </tr>
+			                      
+			                      <tr><th valign="top">Airbag Type</th>
+			                       <ui:repeat var="veh" value="#{basket.policy.vehicle}"><td>
+			                       
+			                       			#{common_mapping_service.getUiValuesByKeyAndCodeAndState('vehicle.Airbag',veh.mvRestrnt,basket.policy.riskState)}
+										</td>
+				                  	 </ui:repeat>
+			                      </tr>
+			                      <tr><th valign="top">ABS Type</th>
+			                       <ui:repeat var="veh" value="#{basket.policy.vehicle}"><td>
+			                       
+			                       #{common_mapping_service.getUiValuesByKeyAndCodeAndState('vehicle.AntiLockBrake',veh.mvAntiLoc,basket.policy.riskState)}
+			                      			
+										</td>
+				                  	 </ui:repeat>
+			                      </tr>
+				                  <tr><th valign="top">Anti-Theft Device</th>
+			                       <ui:repeat var="veh" value="#{basket.policy.vehicle}"><td>
+			                        #{common_mapping_service.getUiValuesByKeyAndCodeAndState('vehicle.antitheft.device',veh.antiTheft,basket.policy.riskState)}
+									</td>
+				                  	 </ui:repeat>
+			                      </tr>
+			                      <tr><th valign="top">Cost New/Current Value</th>
+			                      
+			                       <ui:repeat var="veh" value="#{basket.policy.vehicle}"><td>
+	 									#{veh.mvCostNew}
+										</td>
+				                  	 </ui:repeat>
+			                      </tr>
+			                      <!-- <sec:authorize ifAnyGranted="ROLE_canManualOrderVhl, ROLE_canReorderVhl, ROLE_canOverrideVhl">	
+			                      <tr><th valign="top">Override/Reorder</th>
+			                      
+			                       <ui:repeat var="veh" value="#{basket.policy.vehicle}"><td>
+	 									#{veh.vhlOrderReorder}
+										</td>
+				                  	 </ui:repeat>
+				                 </tr>
+				                 </sec:authorize>
+				                  -->
+			                    <tr class="section-title">
+					                      <th colspan="#{basket.policy.vehicle.size() + 1}">
+					                        Vehicle Usage 
+					                      </th>
+				                  </tr>
+				                  
+				                  <tr id="_usage">
+ 				                  <th valign="top">Vehicle Usage:</th>
+			                       	 <ui:repeat id="usageId" var="veh" value="#{basket.policy.vehicle}"  varStatus="myVarStatus">
+			                       	 	<td>
+				                        	<h:selectOneMenu tabindex="10" id="mvVehUse" 
+													value="#{veh.mvVehUse}" label="mvVehUse" 
+													styleClass="#{component.valid ? '':'has-error'} required tblFldSzeLg form-control"
+													required="true" requiredMessage="#{common_error_service.createUIErrorMessage('2500010',
+													fn:split(''.concat(veh.mvYear).concat(',').concat(veh.mvMake).concat(',').concat(veh.mvModel).concat(',').concat(myVarStatus.index + 1) ,','))}"
+												disabled="#{veh.riskType == 'SNOW' or veh.riskType == 'MTHM' or veh.riskType == 'ANTQ' or veh.riskType == 'UTRL' or veh.riskType == 'MISC'}">
+											 <f:selectItem itemValue="" itemLabel="SELECT" />
+											 <f:selectItems itemLabel="#{entry[1]}" itemValue="#{entry[0]}"
+					                          value="#{common_mapping_service.getSupportedUiVals(basket.policy.riskState,'secondGenVehicleUsage')}" var="entry"/>
+					                      	<f:ajax listener="#{vehicleDisplayService.resetVehUseDependencies(veh)}" />
+					                      	<trigger:selectTrigger selectName="_usage" 
+											trigger="{'Triggers' :[
+												{ 'operator':'equals', 'value': '', 'disabled': ['businessUse:#{myVarStatus.index}:typeBusUse',
+												 						     'daysDriven:#{myVarStatus.index}:daysDrvn',
+												                             'oneWayMiles:#{myVarStatus.index}:mvDayMile',
+												                             'yearMiles:#{myVarStatus.index}:mvYrMiles']},
+												{ 'operator':'equals', 'value': 'W', 'disabled': ['businessUse:#{myVarStatus.index}:typeBusUse'],
+												                 'enabled': ['yearMiles:#{myVarStatus.index}:mvYrMiles',
+												                             'daysDriven:#{myVarStatus.index}:daysDrvn',
+												                             'oneWayMiles:#{myVarStatus.index}:mvDayMile']},
+												{ 'operator':'equals', 'value': 'P', 'disabled': ['businessUse:#{myVarStatus.index}:typeBusUse',
+												 						     'daysDriven:#{myVarStatus.index}:daysDrvn',
+												                             'oneWayMiles:#{myVarStatus.index}:mvDayMile'],
+												                 'enabled': ['yearMiles:#{myVarStatus.index}:mvYrMiles']},
+												{ 'operator':'equals', 'value': 'B', 'disabled': ['daysDriven:#{myVarStatus.index}:daysDrvn',
+												 						     'oneWayMiles:#{myVarStatus.index}:mvDayMile'],
+												                 'enabled': ['businessUse:#{myVarStatus.index}:typeBusUse',
+												                 			 'yearMiles:#{myVarStatus.index}:mvYrMiles']},
+												{ 'operator':'equals', 'value': 'S', 'disabled': ['businessUse:#{myVarStatus.index}:typeBusUse',
+												 						     'daysDriven:#{myVarStatus.index}:daysDrvn',
+												                             'oneWayMiles:#{myVarStatus.index}:mvDayMile'],
+												                 'enabled': ['yearMiles:#{myVarStatus.index}:mvYrMiles']}
+							                 ]};" />
+					                   		</h:selectOneMenu>
+											</td>
+										</ui:repeat>
+ 				                 </tr>
+ 				                 
+ 				                 <tr>
+	 				                <th valign="top">
+	 				                 	Business/Tradesman Use:
+	 				                 	
+		 				            </th>
+		 				            	 <ui:repeat id="businessUse" var="veh" value="#{basket.policy.vehicle}" varStatus="usestat">
+		 				            	 <td>
+		 				            	 <h:panelGroup layout="block" id="buReleated">
+			 									<h:selectOneMenu tabindex="11" id="typeBusUse" disabled="#{veh.mvVehUse != 'B'}"
+															value="#{veh.typeBusUse}" label="typeBusUse" 
+															styleClass="#{veh.mvVehUse == 'B' ?'required':''} #{common_error_service.hasUIErrorWithIndex('2500013',basket.errors, usestat.index) ? 'has-error':''}  tblFldSzeLg form-control">
+													 <f:selectItem itemLabel="SELECT" itemValue="" />
+													 <f:selectItems itemLabel="#{entry[1]}" itemValue="#{entry[0]}"
+							                          value="#{common_mapping_service.getSupportedUiVals(basket.policy.riskState,'typeOfBusinessUse')}" var="entry"/>
+							                         <f:ajax />
+												</h:selectOneMenu>
+										</h:panelGroup>
+										</td>
+										 </ui:repeat>
+		 				            </tr>
+ 				                 <tr><th valign="top">Annual Miles:</th>
+			                       	 <ui:repeat id="yearMiles" var="veh" value="#{basket.policy.vehicle}" varStatus="milesIdx">
+			                       	 <td>
+			                       	  
+	 									<mycomp:inputText tabindex="12" id="mvYrMiles" value="#{veh.mvYrMiles}" trim="true" upper="true" 
+	 									styleClass="#{component.valid ? '':'has-error'} #{common_error_service.hasUIErrorWithIndex('2511001,2500011',basket.errors,milesIdx.index ) ? 'has-error':''}
+	 									#{veh.mvVehUse == 'W' or veh.mvVehUse == 'P' or veh.mvVehUse == 'B' or veh.mvVehUse == 'S' ? 'required':''}  tblFldSzeSm form-control" 
+	 									disabled="#{(veh.mvVehUse != 'W'  and veh.mvVehUse != 'P' and veh.mvVehUse != 'B' and veh.mvVehUse != 'S') or veh.riskType == 'MISC'}"
+	 									validatorMessage= "#{common_error_service.createUIErrorMessage('2511001', fn:split(''.concat(veh.mvYear).concat(',').concat(veh.mvMake).concat(',').concat(veh.mvModel).concat(',').concat(milesIdx.index + 1) ,','))}"
+										maxlength="6" >
+	 									<f:validator validatorId="com.mycomp.arch.jsf.NumberValidator"/>
+	 									 <f:ajax render="mvYrMiles"/>
+	 									</mycomp:inputText>
+										</td>
+				                  	 </ui:repeat>
+ 				                 </tr>
+ 				                 <tr><th valign="top">Days Driven to Work/School per Week:</th>
+			                       	 <ui:repeat id="daysDriven" var="veh" value="#{basket.policy.vehicle}" varStatus="daysDrvnIdx">
+			                       	 <td>
+			                       	 	<h:panelGroup layout="block" id="mvVehUseDaysDrvn" > 
+	 									<h:selectOneMenu tabindex="13" id="daysDrvn" 
+													value="#{veh.daysDrvn}" label="daysDrvn" disabled="#{veh.mvVehUse != 'W'}" 
+													styleClass="#{veh.mvVehUse == 'W' ?'required':''} #{common_error_service.hasUIErrorWithIndex('2500012',basket.errors,daysDrvnIdx.index ) ? 'has-error':''} tblFldSzeSm form-control">
+													<f:selectItem itemLabel="SELECT" itemValue="" />
+													<f:selectItem itemValue="1" itemLabel="1" />
+													<f:selectItem itemValue="2" itemLabel="2" />
+													<f:selectItem itemValue="3" itemLabel="3" />
+													<f:selectItem itemValue="4" itemLabel="4" />
+													<f:selectItem itemValue="5" itemLabel="5" />
+													<f:selectItem itemValue="6" itemLabel="6" />
+													<f:selectItem itemValue="7" itemLabel="7" />
+													<f:ajax />
+										</h:selectOneMenu>
+										</h:panelGroup>
+										</td>
+				                  	 </ui:repeat>
+ 				                 </tr>
+ 				                 <tr><th valign="top">1-Way Mileage:</th>
+			                       	 <ui:repeat id="oneWayMiles" var="veh" value="#{basket.policy.vehicle}" varStatus="oneWayIdx">
+			                       	 <td>
+	 									<mycomp:inputText tabindex="14" id="mvDayMile" value="#{veh.mvDayMile}" trim="true" upper="true" 
+	 									disabled="#{veh.mvVehUse != 'W'}" 
+	 									styleClass="#{veh.mvVehUse == 'W' ?'required':''} #{common_error_service.hasUIErrorWithIndex('2509001',basket.errors,oneWayIdx.index ) ? 'has-error':''} tblFldSzeSm form-control">
+	 									<f:ajax event="change" execute="@this"/>
+	 									</mycomp:inputText>
+	 									
+										</td>
+				                  	 </ui:repeat>
+ 				                 </tr>
+ 				                 
+ 				                  <tr><th>
+ 				                 	 Ownership</th>
+			                       	 <ui:repeat var="veh" value="#{basket.policy.vehicle}" varStatus="ownerIdx">
+			                       	 <td>
+			                       	 <ui:fragment id ="owner" rendered="#{vehicleDisplayService.isAssignableVehicle(veh.riskType)  == 'true'}" >
+	 									<h:selectOneMenu tabindex="11" id="ownership" 
+															value="#{veh.cltOwner}" label="ownership"  
+															styleClass="#{component.valid ? '':'has-error'} 
+															#{common_error_service.hasUIErrorWithIndex('2699999,2600001',basket.errors,driverIdx.index) ? 'has-error':''} required tblFldSzeXl"
+															required="true" 
+															requiredMessage="#{common_error_service.createUIErrorMessage('2600001',
+															fn:split(''.concat(veh.mvYear).concat(',').concat(veh.mvMake).concat(',').concat(veh.mvModel).concat(',').concat(ownerIdx.index + 1) ,','))}">
+													 <f:selectItem itemValue="" itemLabel="SELECT" />
+													 <f:selectItems itemLabel="#{entry.value}" itemValue="#{entry.key}"
+					                          			value="#{vehicleDisplayService.retrieveAssignableDriversList(flowScope.basket).entrySet()}" var="entry"/>
+					                          			<f:ajax />
+										</h:selectOneMenu>
+										</ui:fragment>
+										<ui:fragment id ="noOwner" rendered="#{vehicleDisplayService.isAssignableVehicle(veh.riskType)  != 'true'}" >
+	 									<h:selectOneMenu tabindex="9" id="ownershipNo"  value="#{veh.cltDriver}" disabled="true" class="form-control">
+											 <f:selectItem itemValue="" itemLabel="SELECT" />
+										</h:selectOneMenu>
+										</ui:fragment>
+									 </td>
+				                  	 </ui:repeat>
+ 				                 </tr>
+ 				                 
+ 				                  <tr><th>
+ 				                 	 Assigned Driver</th>
+			                       	 <ui:repeat var="veh" value="#{basket.policy.vehicle}" varStatus="driverIdx">
+			                       	 <td>
+			                       	 <ui:fragment id ="assignment" rendered="#{vehicleDisplayService.isAssignableVehicle(veh.riskType)  == 'true'}" >
+										<h:selectOneMenu tabindex="12" id="assignedDriver" 
+															value="#{veh.cltDriver}" label="assignedDriver" 
+															styleClass="#{component.valid ? '':'has-error'} 
+															#{common_error_service.hasUIErrorWithIndex('2699999,2600012',basket.errors,driverIdx.index) ? 'has-error':''} required tblFldSzeXl"
+															required="true" 
+															requiredMessage="#{common_error_service.createUIErrorMessage('2600012', 
+															fn:split(''.concat(veh.mvYear).concat(',').concat(veh.mvMake).concat(',').concat(veh.mvModel).concat(',').concat(driverIdx.index + 1) ,','))}">
+													 <f:selectItem itemValue="" itemLabel="SELECT" />
+													 <f:selectItems itemLabel="#{entry.value}" itemValue="#{entry.key}"
+					                        				  value="#{vehicleDisplayService.retrieveAssignableDriversList(flowScope.basket).entrySet()}" var="entry"/>
+					                          <f:ajax listener="#{vehicleDisplayService.resetDriverName(veh,flowScope.basket)}"/>
+										</h:selectOneMenu>
+										</ui:fragment>
+										<ui:fragment id ="noAssignment" rendered="#{vehicleDisplayService.isAssignableVehicle(veh.riskType)  != 'true'}" >
+		 									<h:selectOneMenu tabindex="9" id="NoassignedDriver"  value="#{veh.driverName}" disabled="true" class="form-control">
+												 <f:selectItem itemValue="" itemLabel="SELECT" />
+											</h:selectOneMenu>
+										</ui:fragment>
+									 </td>
+				                  	 </ui:repeat>
+ 				                 </tr>
+ 				                 
+ 				                  <tr class="section-title">
+					                      <th colspan="#{basket.policy.vehicle.size() + 1}">
+					                        Additional Details
+					                      </th>
+				                  </tr>
+				                  
+				                 <tr><th valign="top">Date Purchased</th>
+			                       	 <ui:repeat var="veh" value="#{basket.policy.vehicle}" varStatus="idx"><td>
+			                           	 <p:inputMask id="purLseDte" label="Date Purchased"  mask="?99/99/9999"
+											placeholder="mm/dd/yyyy"
+											styleClass="#{component.valid ? '':'has-error'} 
+											#{common_error_service.hasUIErrorWithIndex('2500037,2500038,2500051',basket.errors, idx.index) ? 'has-error':''} required getDatePicker fldSizeSm" 
+											required="true" 
+											requiredMessage="#{common_error_service.createUIErrorMessage('2500035',
+																			fn:split(''.concat(veh.mvYear).concat(',').concat(veh.mvMake).concat(',').concat(veh.mvModel).concat(',').concat(idx.index + 1) ,','))}"
+											trim="true"
+											value="#{veh.purLseDte}" maxlength="10"	>
+											<f:convertDateTime pattern="MM/dd/yyyy" />
+											<f:ajax />
+										</p:inputMask>
+	 									</td>
+				                  	 </ui:repeat>
+ 				                 </tr>
+ 				                 <tr id="_prevTitled">
+ 				                 <th valign="top">Previously titled?</th>
+			                       	 <ui:repeat id="prevTitledId" var="veh" value="#{basket.policy.vehicle}" varStatus="titledStatus">
+			                       	 <td>
+	 									<h:selectOneMenu tabindex="8" id="prvtTlInd" 
+													value="#{veh.prvtTlInd}" label="prvtTlInd" 
+													styleClass="#{component.valid ? '':'has-error'} required tblFldSzeSm form-control"
+													required="true" 
+													requiredMessage="#{common_error_service.createUIErrorMessage('2500034',
+																			fn:split(''.concat(veh.mvYear).concat(',').concat(veh.mvMake).concat(',').concat(veh.mvModel).concat(',').concat(titledStatus.index + 1) ,','))}">
+											<f:selectItem itemValue="" itemLabel="SELECT" />
+									 		<f:selectItem itemValue="Y" itemLabel="Yes" />
+											<f:selectItem itemValue="N" itemLabel="No" />
+											<f:ajax listener="#{vehicleDisplayService.resetPrevTitleDependencies(veh)}"/>
+										</h:selectOneMenu>
+										<trigger:selectTrigger selectName="_prevTitled" 
+											trigger=" 
+											{'Triggers' :[
+												{ 'operator':'equals', 'value': 'Y', 'disabled': ['itrEverDamaged:#{titledStatus.index}:everDamaged'],
+												                 					  'enabled': ['itrPriorTitledOwner:#{titledStatus.index}:vhlPriorTitledOwner']},
+												{ 'operator':'equals', 'value': 'N', 'disabled': ['itrPriorTitledOwner:#{titledStatus.index}:vhlPriorTitledOwner'],
+												                 					  'enabled': ['itrEverDamaged:#{titledStatus.index}:everDamaged']},
+												{ 'operator':'equals', 'value': '', 'disabled': ['itrEverDamaged:#{titledStatus.index}:everDamaged',
+																								'itrPriorTitledOwner:#{titledStatus.index}:vhlPriorTitledOwner']}												                 
+							                 ]};" />
+										</td>
+				                  	 </ui:repeat>
+ 				                 </tr>
+ 				                 <ui:fragment rendered="#{basket.policy.riskState != 'MI'}">
+ 				                 
+				                  <ui:fragment rendered="#{vehicleDisplayService.isViewVhl(basket)}">	
+	 				                 <tr><th valign="top">How many prior titled owners are there?</th>
+				                       	 <ui:repeat id="itrPriorTitledOwner" var="veh" value="#{basket.policy.vehicle}" varStatus="priorTtlIdx">
+				                       	 <td>
+				                       	 <ui:fragment id ="priorTitledOwner" 
+				                       	 		rendered="#{vehicleDisplayService.isDisplayVhlQuestion(veh,basket.policy.riskState, basket.policy.subCoy, basket.policy.effectDte) == 'true'}" >
+		 									<h:selectOneMenu tabindex="9" id="vhlPriorTitledOwner" disabled="#{veh.prvtTlInd != 'Y'}" required="#{veh.prvtTlInd == 'Y'}"
+														value="#{veh.vhlPriorTitledOwner}" label="How many prior titled owners are there?" 
+														styleClass="#{component.valid ? '':'has-error'} #{veh.prvtTlInd == 'Y'? 'required':'' } tblFldSzeSm form-control"
+														requiredMessage="#{common_error_service.createUIErrorMessage('2996001',
+																			fn:split(''.concat(veh.mvYear).concat(',').concat(veh.mvMake).concat(',').concat(veh.mvModel).concat(',').concat(priorTtlIdx.index + 1) ,','))}">
+												<f:selectItem itemValue="" itemLabel="SELECT" />
+										 		<f:selectItem itemValue="Y" itemLabel="1" />
+												<f:selectItem itemValue="N" itemLabel=">1 or Unknown" />
+											</h:selectOneMenu>
+										</ui:fragment>
+										<ui:fragment id ="noPriorTitledOwner" 
+				                       	 		rendered="#{vehicleDisplayService.isDisplayVhlQuestion(veh,basket.policy.riskState, basket.policy.subCoy, basket.policy.effectDte) == 'false'}" >
+				                       	 		<h:selectOneMenu tabindex="9" id="noVhlPriorTitledOwner"  value="#{veh.vhlPriorTitledOwner}" disabled="true" 
+				                       	 		class="tblFldSzeSm form-control">
+													 <f:selectItem itemValue="" itemLabel="SELECT" />
+												</h:selectOneMenu>
+										</ui:fragment>
+										</td>
+					                  	</ui:repeat>
+	 				                 </tr>
+	 				                 </ui:fragment>
+	 				                 
+				                       		
+	 				                  <ui:fragment rendered="#{vehicleDisplayService.isViewVhl(basket)}">	
+	 				                  <tr><th valign="top">Ever been damaged?</th>
+				                       	 <ui:repeat id="itrEverDamaged" var="veh" value="#{basket.policy.vehicle}"  varStatus="everDamagedIdx">
+				                       	 <td>
+				                       	 <ui:fragment id ="everDamagedDisp" 
+				                       	 		rendered="#{vehicleDisplayService.isDisplayVhlQuestion(veh,basket.policy.riskState, basket.policy.subCoy, basket.policy.effectDte) =='true'}" >
+		 									<h:selectOneMenu tabindex="10" id="everDamaged" disabled="#{veh.prvtTlInd != 'N'}" required="#{veh.prvtTlInd == 'N'}"
+														value="#{veh.damagedInd}" label="Ever been damaged" styleClass="#{component.valid ? '':'has-error'} #{veh.prvtTlInd == 'N' ? 'required' :''} tblFldSzeMd form-control"
+														requiredMessage="#{common_error_service.createUIErrorMessage('2996002',
+													fn:split(''.concat(veh.mvYear).concat(',').concat(veh.mvMake).concat(',').concat(veh.mvModel).concat(',').concat(everDamagedIdx.index + 1) ,','))}">
+												<f:selectItem itemValue="" itemLabel="SELECT" />
+										 		<f:selectItem itemValue="Y" itemLabel="Yes" />
+												<f:selectItem itemValue="N" itemLabel="No or Unknown" />
+												<f:ajax /> 
+											</h:selectOneMenu>
+										</ui:fragment>
+											
+										<ui:fragment id ="everDamagedNoDisp" 
+				                       	 		rendered="#{vehicleDisplayService.isDisplayVhlQuestion(veh,basket.policy.riskState, basket.policy.subCoy, basket.policy.effectDte) =='false'}" >
+		 									<h:selectOneMenu tabindex="10" id="noEverDamaged" disabled="true" 
+		 									class="tblFldSzeSm form-control"
+														value="#{veh.damagedInd}" label="Ever been damaged">
+												<f:selectItem itemValue="" itemLabel="SELECT" />
+												<f:ajax/>
+											</h:selectOneMenu>
+										</ui:fragment>
+											</td>
+					                  	 </ui:repeat>
+	 				                 </tr>
+									</ui:fragment>
+ 				                 
+ 				                 </ui:fragment>
+
+				                  <tr><th valign="top">Registered State</th>
+			                       	 <ui:repeat var="veh" value="#{basket.policy.vehicle}" varStatus="registeredStateIdx">
+			                       	 <td>
+		 									<h:selectOneMenu tabindex="9" id="regiState" 
+													value="#{veh.regiState}" label="regiState"
+													styleClass="#{component.valid ? '':'has-error'} required tblFldSzeXl" 
+													required="true"
+													requiredMessage="#{common_error_service.createUIErrorMessage('2500008',
+													fn:split(''.concat(veh.mvYear).concat(',').concat(veh.mvMake).concat(',').concat(veh.mvModel).concat(',').concat(registeredStateIdx.index + 1)  ,','))}">
+											 <f:selectItems itemLabel="#{entry[1]}" itemValue="#{entry[0]}"
+					                          value="#{common_mapping_service.getUiValuesByMappingKey('state')}" var="entry"/>
+											</h:selectOneMenu>
+	 									</td>
+				                  	 </ui:repeat>
+ 				                 </tr> 
+				                 
+				                  
+				                  <tr id="_modifications"><th >Modified to increase performance?</th>
+			                       	 <ui:repeat id="modifyId" var="veh" value="#{basket.policy.vehicle}" varStatus="modifyStatus"><td>
+				                       	 	<h:selectOneMenu tabindex="15" id="perModfn" 
+														value="#{veh.perModfn}" label="perModfn" 
+														styleClass="#{component.valid ? '':'has-error'} required tblFldSzeSm"
+														required="true" 
+														requiredMessage="#{common_error_service.createUIErrorMessage('2500014',
+															fn:split(''.concat(veh.mvYear).concat(',').concat(veh.mvMake).concat(',').concat(veh.mvModel).concat(',').concat(modifyStatus.index + 1)  ,','))}">
+										 		<f:selectItem itemLabel="SELECT" itemValue="#{null}" />
+										 		<f:selectItem itemValue="Y" itemLabel="Yes" />
+												<f:selectItem itemValue="N" itemLabel="No" />
+												<f:ajax />
+											</h:selectOneMenu>
+										</td>
+				                  	 </ui:repeat>
+ 				                 </tr>
+		                   		<tr><th valign="top">
+		                   		Modifications in excess of $1000</th>
+			                       	 <ui:repeat id="extraEquip" var="veh" value="#{basket.policy.vehicle}" varStatus="extraEquipIdx">
+			                       	 <td>
+			                       	 	<h:selectOneMenu id="excess"
+														value="#{veh.custVehi}" label="excess" 
+														styleClass="#{component.valid ? '':'has-error'}  #{(veh.riskType == 'REGL' or veh.riskType == 'UTIL' or veh.riskType == 'VANS') ? 'required' : ''} tblFldSzeSm"
+														required="true" 
+														requiredMessage="#{common_error_service.createUIErrorMessage('2500050',
+													fn:split(''.concat(veh.mvYear).concat(',').concat(veh.mvMake).concat(',').concat(veh.mvModel).concat(',').concat(extraEquipIdx.index + 1) ,','))}"
+												disabled="#{veh.riskType != 'REGL' and veh.riskType != 'UTIL' and veh.riskType != 'VANS'}">
+										 		<f:selectItem itemValue="" itemLabel="SELECT" />
+										 		<f:selectItem itemValue="Y" itemLabel="Yes" />
+												<f:selectItem itemValue="N" itemLabel="No" />
+												<f:ajax />
+										</h:selectOneMenu>
+										</td>
+				                  	 </ui:repeat>
+ 				                 </tr>
+ 				                 
+ 				                 
+ 				                 <ui:fragment id ="showSnowAnciliary" rendered="#{basket.policy.riskState == 'MN'}" >
+ 				                 <tr><th valign="top">
+		                   			Is snowmobile equipped with an authorized snowmobile auxiliary hazard lighting system </th>
+			                       	 <ui:repeat id="snowAnciliary" var="veh" value="#{basket.policy.vehicle}" varStatus="snowAncIdx">
+			                       	 <td>
+			                       	 	<h:selectOneMenu id="snowAnc"
+														value="#{veh.SALightIn}" label="snowAnciliaryEquip" 
+														styleClass="#{component.valid ? '':'has-error'}  #{(veh.riskType == 'SNOW') ? 'required' : ''} tblFldSzeSm form-control"
+														required="true" 
+														requiredMessage="#{common_error_service.createUIErrorMessage('2980013',
+													fn:split(''.concat(veh.mvYear).concat(',').concat(veh.mvMake).concat(',').concat(veh.mvModel).concat(',').concat(snowAncIdx.index + 1) ,','))}"
+												disabled="#{veh.riskType != 'SNOW'}">
+										 		<f:selectItem itemValue="" itemLabel="SELECT" />
+										 		<f:selectItem itemValue="Y" itemLabel="Yes" />
+												<f:selectItem itemValue="N" itemLabel="No" />
+												<f:ajax />
+										</h:selectOneMenu>
+										</td>
+				                  	 </ui:repeat>
+ 				                 </tr>
+ 				                 </ui:fragment>
+ 				                 
+ 				                 
+ 				                 
+				                  <tr id="_snowPlowAttached"><th valign="top">Snow plow attached?</th>
+				                   	 <ui:repeat id="snowPlowId" var="veh" value="#{basket.policy.vehicle}" varStatus="snowPlowStatus">
+			                       	 <td>
+	 									<h:selectOneMenu tabindex="17" id="plowInd" value="#{veh.plowInd}" styleClass="tblFldSzeSm" >
+										 		<f:selectItem itemValue="Y" itemLabel="Yes" />
+												<f:selectItem itemValue="N" itemLabel="No" />
+												<f:ajax listener="#{vehicleDisplayService.resetSnowPlowDependencies(veh)}" />
+										</h:selectOneMenu>
+										<trigger:selectTrigger selectName="_snowPlowAttached" 
+											trigger=" 
+											{'Triggers' :[
+												{ 'operator':'equals', 'value': 'Y', 'enabled': ['itrSnowOtherPurposes:#{snowPlowStatus.index}:snowOtherPurposes']},
+												{ 'operator':'notEquals', 'value': 'Y', 'disabled': ['itrSnowOtherPurposes:#{snowPlowStatus.index}:snowOtherPurposes']}
+							                 ]};" />
+										</td>
+				                  	 </ui:repeat>
+ 				                 </tr>
+ 				                 <tr><th valign="top">Snow plow used for non-personal use?</th>
+			                       	 <ui:repeat id="itrSnowOtherPurposes" var="veh" value="#{basket.policy.vehicle}" varStatus="snowOtherPurposeStatus">
+			                       	 <td>
+	 									<h:selectOneMenu tabindex="18" id="snowOtherPurposes" value="#{veh.snowPlowNotPersonalUse}" disabled="#{veh.plowInd != 'Y'}" styleClass="tblFldSzeSm form-control" >
+										 		<f:selectItem itemValue="" itemLabel="SELECT" />
+										 		<f:selectItem itemValue="Y" itemLabel="Yes" />
+												<f:selectItem itemValue="N" itemLabel="No" />
+												<f:ajax />
+										</h:selectOneMenu>
+										</td>
+				                  	 </ui:repeat>
+ 				                 </tr>
+ 				                 <tr><th valign="top">Inspected?</th>
+			                       	 <ui:repeat var="veh" value="#{basket.policy.vehicle}">
+			                       	 <td>
+	 									<h:selectOneMenu tabindex="19" id="inspecInd" value="#{veh.inspecInd}" styleClass="tblFldSzeSm" >
+										 		<f:selectItem itemValue="" itemLabel="SELECT" />
+										 		<f:selectItem itemValue="Y" itemLabel="Yes" />
+												<f:selectItem itemValue="N" itemLabel="No" />
+												<f:ajax />
+										</h:selectOneMenu>
+									</td>
+  			                  	    </ui:repeat>
+ 				                 </tr>
+ 				                 <tr><th valign="top">Existing Damage?</th>
+			                       	 <ui:repeat var="veh" value="#{basket.policy.vehicle}">
+			                       	 <td>
+	 									<h:selectOneMenu tabindex="20" id="existDamg" value="#{veh.existDamg}" styleClass="tblFldSzeXl" >
+											<f:selectItem itemValue="" itemLabel="SELECT" />
+											 <f:selectItems itemLabel="#{entry[1]}" itemValue="#{entry[0]}"
+					                          value="#{common_mapping_service.getSupportedUiVals(basket.policy.riskState,'existingDamage')}" var="entry"/>
+					                          <f:ajax />
+										</h:selectOneMenu>
+										</td>
+				                  	 </ui:repeat>
+ 				                 </tr>
+ 				                
+ 				                 
+ 				                 <ui:fragment id ="showOEM" rendered="#{vehicleDisplayService.validateDisplayOEM(basket) == 'true'}" >
+ 				                  <tr><th valign="top">
+ 				                 	 Enhanced Exterior Repair Option?</th>
+			                       	 <ui:repeat var="veh" value="#{basket.policy.vehicle}"  varStatus="enhExtIdx"><td>
+			                       	    <ui:fragment id ="enableOEM" rendered="#{vehicleDisplayService.disableExteriorRepairOption(veh,basket) == 'false' }" >
+	 								    <h:selectOneMenu tabindex="23" id="enhanceRepair" 
+														value="#{veh.oemInd}" label="enhanceRepair" 
+														styleClass="#{component.valid ? '':'has-error'} required tblFldSzeSm"
+														required="true" 
+														requiredMessage="#{common_error_service.createUIErrorMessage('2985002',
+													fn:split(''.concat(veh.mvYear).concat(',').concat(veh.mvMake).concat(',').concat(veh.mvModel).concat(',').concat(enhExtIdx.index + 1)  ,','))}">
+										 		<f:selectItem itemValue="" itemLabel="SELECT" />
+										 		<f:selectItem itemValue="Y" itemLabel="Yes" />
+												<f:selectItem itemValue="N" itemLabel="No" />
+												<f:ajax />
+										</h:selectOneMenu>
+										</ui:fragment>
+										<ui:fragment id ="disableOEM" rendered="#{vehicleDisplayService.disableExteriorRepairOption(veh,basket) != 'false' }" >
+	 								    <h:selectOneMenu tabindex="23" id="noEnhanceRepair" 
+														value="#{veh.oemInd}" label="enhanceRepair" disabled="true"
+														styleClass="tblFldSzeSm">
+										 		<f:selectItem itemValue="" itemLabel="SELECT" />
+												<f:ajax />
+										</h:selectOneMenu>
+										</ui:fragment>
+										</td>
+				                  	 </ui:repeat>
+ 				                 </tr>
+ 				                 </ui:fragment>
+ 				                 
+ 				                 
+ 				                 <tr class="section-title">
+					                      <th colspan="#{basket.policy.vehicle.size() + 1}">
+					                        Interested Party
+					                      </th>
+				                  </tr>
+ 				                 <tr><th valign="top">IP Info:</th>
+			                       	 <ui:repeat var="veh" value="#{basket.policy.vehicle}">
+			                       	
+			                       	 <ui:fragment id ="ipPanelYes" rendered="#{veh.interestedParty.size() gt 0 }" >
+			                       	 	<td align="left"> 
+			                       	 	<ui:repeat var="iparty" value="#{veh.interestedParty}" varStatus="myIpCount">
+			                       	 	 <span style="color: #202020; font-size:10px;">
+			                       	 	<ui:fragment id ="ipPanelCnt" rendered="#{veh.interestedParty.size() eq 2 }" >
+			                       	 	<b>Interested Party : #{myIpCount.index + 1}</b><br/>
+			                       	 	</ui:fragment>
+			                       	 	Name: #{iparty.surname},#{iparty.firstName}<br/>
+			                       	 	Address: #{iparty.address.streetNo} #{iparty.address.street}, #{iparty.address.city} , #{iparty.address.state} #{iparty.address.postCode} <br/>
+			                       	 	Type: #{vehicleDisplayService.decodeIpType(iparty)}<br/>
+			  							Reference No:#{iparty.refNo} #{iparty.loanNumber}<br/>
+			  							</span>
+			                       	 	</ui:repeat>
+			                       	 	</td>
+			                       	 </ui:fragment>
+			                       	 <ui:fragment id ="ipPanelNo" rendered="#{veh.interestedParty.size() eq 0 }" >
+			                       	 <td valign="top" align="left"> <span style="color: #202020; font-size:10px;">
+			                       	 	No IP
+			                       	 	
+			                       	 	</span></td>
+			                       	 </ui:fragment>
+			                       	 
+				                  	 </ui:repeat>
+ 				                 </tr>
+ 				                
+ 				                <tr class="section-title">
+					                      <th colspan="#{basket.policy.vehicle.size() + 1}">
+					                        Alternate Garage Address 
+					                      </th>
+				                  </tr>
+ 				                 <tr><th valign="top">
+ 				                 	 Alternate garage location:</th>
+			                       	 <ui:repeat var="veh" value="#{basket.policy.vehicle}">
+			                       	 
+			                       	 <ui:fragment id ="gaPanelYes" rendered="#{'Y' == veh.altGarageExists}" >
+			                       
+			                       	 	<td valign="top" align="left">
+			                       	 	<ui:repeat var="gaAddr" value="#{veh.garageAddress}" varStatus="myIpCount">
+			                       	 	<span align="left" style="color: #202020; font-size:10px;">
+				                       	 	Address: #{gaAddr.streetNo} #{gaAddr.street}, #{gaAddr.city} , #{gaAddr.state} #{gaAddr.postCode}<br/>
+			  							</span>
+			                       	 	</ui:repeat>
+			                       	 	</td>
+			                       	 </ui:fragment>
+			                       	 <ui:fragment id ="gaPanelNo" rendered="#{'Y' != veh.altGarageExists }" >
+			                       	 	 <td valign="top" align="left"><span style="color: #202020; font-size:10px;">
+			                       	 	No Alternate Garage location
+			                       	 	
+			                       	 	</span></td>
+			                       	 </ui:fragment>
+			                      
+				                  	 </ui:repeat>
+ 				                 </tr>
+ 				                 
+ 				                
+ 				                
+ 				                 
+ 				                 </tbody>
+ 				       </h:panelGroup>
+                  </table>
+                 </div>
+              
+                <!-- div class="col-md-6 col-sm-6"></div-->
+                </div> <!-- End Panel Body -->
+              
+                <div class="clearfix"></div>  
+	          <div class="panel-footer">
+	          <div class="pull-right">
+	            <!-- a href="#" class="btn btn-success btn-sm panel-btn-sze">Next<span><i class="fa fa-arrow-right" aria-hidden="true"></i></span></a-->
+	            <h:commandLink action="next" styleClass="btn btn-success btn-sm panel-btn-sze">Next<i class="fa fa-arrow-right" aria-hidden="true"></i></h:commandLink>
+	          </div>
+	          <div class="pull-right">
+	            <!-- a href="#" class="btn btn-primary btn-sm panel-btn-sze Prev-btn"><span><i class="fa fa-arrow-left" aria-hidden="true"></i></span>Previous</a-->
+	            <h:commandLink action="previous" styleClass="btn btn-primary btn-sm panel-btn-sze Prev-btn"><i class="fa fa-arrow-left" aria-hidden="true"></i>Previous</h:commandLink>
+	          </div>
+	         </div>
+	          
+	        </div>	<!--  panel-customSS2  -->
+        </h:form>
+                  
+              
+       </div>	 <!-- contentWrapper -->
+ 
+
+ 
+ 
+  <!-- Initialize sorter and add theme -->
+ <script id="js">$(function() {
+
+	
+	/*** Bootstrap popover ***/
+
+	// initialize column selector using default settings
+	// note: no container is defined!
+	$("table thead th:eq(3)").data("sorter", false);
+	$(".bootstrap-popup").tablesorter({
+		theme: 'blue',
+		widgets: ['zebra', 'columnSelector', 'stickyHeaders']
+		
+		
+	});
+
+	// call this function to copy the column selection code into the popover
+	$.tablesorter.columnSelector.attachTo( $('.bootstrap-popup'), '#popover-target');
+
+	$('#popover')
+		.popover({
+			placement: 'right',
+			html: true, // required if content has HTML
+			content: $('#popover-target')
+		});
+
+
+
+
+});
+</script>
+
+
+
+</ui:define>	
+		
+</ui:composition>		
+
+

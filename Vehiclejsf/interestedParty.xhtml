@@ -1,0 +1,281 @@
+ <ui:composition xmlns="http://www.w3.org/1999/xhtml"
+		xmlns:ui="http://java.sun.com/jsf/facelets"
+		xmlns:h="http://java.sun.com/jsf/html"
+		xmlns:f="http://java.sun.com/jsf/core"
+		xmlns:p="http://primefaces.org/ui" 
+		xmlns:mycomp="http://mycomp.com/mycompfaces"  
+		xmlns:trigger="http://java.sun.com/jsf/composite/mycompClientTrigger" 
+		xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+		xmlns:sec="http://www.springframework.org/security/tags">
+ 
+ 
+ 
+ 		<h:panelGroup id="groupPanel">
+ 		<ui:fragment rendered="#{vehSel.interestedParty.size() lt 2 and basket.ipAction ne 'addmoreIp'}">
+ 		<!-- div class="row">
+ 		 <div class="col-md-12">
+	 		 <div class="col-md-10">
+	                 <span style="color: #202020; font-size:9px;">
+	                 	For Company Search:  Type should equal Leaseholder, Lienholder or Additional Interest - Company and then enter the Company Name
+						<br/> - OR- <br/>
+						For Individual Search:  Type should equal Additional Interest - Person and then enter the Last Name and at least one of the other fields listed below:
+					</span>
+			</div>
+		</div>
+		</div-->
+	 	<div class ="row">
+	 	 <div class="col-md-12">	
+	 	 	
+
+            <h:panelGroup id="compNamePanel" >
+                <ui:fragment rendered="#{basket.ipAction ne 'editIp' and basket.ipAction ne 'addIp'}">	
+              	<ui:fragment rendered="#{basket.searchPartyType.formTypeOfClient != 'F-I'}">
+                 	
+				 <div class="col-md-3">	                   			
+                       <label for="ipCompName">Company Name: </label>
+	                       <mycomp:inputText id="ipCompName" value="#{basket.searchPartyType.surname}" label="Company Name" trim="true"
+							upper="true" size="50" maxlength="20"
+	                       disabled="#{basket.ipAction eq 'editIp' or basket.ipAction eq 'addIp'}">
+	                       <f:ajax/>
+	                       </mycomp:inputText>
+	                </div>
+                     		
+               </ui:fragment>
+               </ui:fragment>
+                    
+				</h:panelGroup>
+                <h:panelGroup id="ipPersonPanel" >
+                   
+	 				 	<ui:fragment rendered="#{basket.ipAction ne 'editIp' and basket.ipAction ne 'addIp'}">
+                     <ui:fragment rendered="#{basket.searchPartyType.formTypeOfClient == 'F-I'}">
+                     
+						<div class="col-md-3">
+	                       <label for="ipLastName">Last Name: </label>
+		                       <mycomp:inputText id="ipLastName" value="#{basket.searchPartyType.surname}" label="Last Name" trim="true" upper="true"
+		                       maxlength="20"
+		                       disabled="#{basket.ipAction eq 'editIp' or basket.ipAction eq 'addIp'}">
+		                       <f:ajax/>
+		                       </mycomp:inputText>
+	                    
+	                    </div>
+	                 	   <div class="col-md-2">
+	                       <label for="ipFirstName">First Name: </label>
+		                       <mycomp:inputText id="ipFirstName" value="#{basket.searchPartyType.firstName}" label="First Name" trim="true" upper="true"
+		                       maxlength="10"
+		                       disabled="#{basket.ipAction eq 'editIp' or basket.ipAction eq 'addIp'}">
+		                       <f:ajax/>
+		                       </mycomp:inputText>
+							</div>
+							 
+                     </ui:fragment>
+                     	
+                     	</ui:fragment>
+                    </h:panelGroup>
+                		
+			        <h:panelGroup id="addEditIpPanel" >
+	                
+				 				
+	                     	<ui:fragment rendered="#{basket.ipAction ne 'editIp' and basket.ipAction ne 'addIp'}">
+							<div class="col-md-2">	
+		                       <label for="ipCity">City:</label>
+		                       <mycomp:inputText id="ipCity" label="City" trim="true" upper="true"
+		                       value="#{basket.searchPartyType.address.city}"  maxlength="10"  >
+		                       <f:ajax/>
+		                       </mycomp:inputText>
+		                       </div>
+		                       <div class="col-md-1">	
+						   
+		                       <label for="ipZip">Zip:</label>
+		                       <mycomp:inputText id="ipZip" label="Zip Code" trim="true" upper="true"
+		                       value="#{basket.searchPartyType.address.postCode}"  maxlength="5"  >
+		                       <f:ajax/>
+		                       </mycomp:inputText>
+		                       </div>
+
+	                   	 </ui:fragment>
+	                   
+			          </h:panelGroup>
+			          <ui:fragment rendered="#{basket.ipAction ne 'hideSearchIP' and basket.ipAction ne 'editIp' and basket.ipAction ne 'addIp'}">
+			          <div class="col-md-2">	
+				          <ui:fragment rendered="#{basket.ipAction eq 'editIp' or basket.ipAction ne 'addIp'}">
+				          <label for="blank"/>
+				          </ui:fragment>
+				        <div>  
+						<h:commandLink id="srchInterestedParty" styleClass="btn btn-xs btn-primary " action="search_interested_parties" value="Search IP" immediate="true">
+						<i class="fa fa-search lookup-fa" aria-hidden="true" title="click for Vehicle Lookup"></i>
+						</h:commandLink>
+						</div>
+						</div>
+						<div class="col-md-2">	
+				          <ui:fragment rendered="#{basket.ipAction eq 'editIp' or basket.ipAction ne 'addIp'}">
+				          <label for="blank"/>
+				          </ui:fragment>
+				        <div>  
+						<h:commandLink id="cancel_SrchInterestedParty" styleClass=" btn-xs btn btn-danger "  value="Cancel IP Search " action="cancelSearchInterestedParty" render="addEditIP" immediate="true">
+						<i class="fa fa-times lookup-fa" aria-hidden="true" title="Cancel add/edit vehicle"></i>
+						</h:commandLink>
+						</div>
+						</div>
+						</ui:fragment>
+						<div class="col-md-offset-2"></div>
+			    	</div>
+			       </div>	
+				<!-- /div>  end of row -->	 
+		</ui:fragment>
+		        
+		</h:panelGroup> 
+
+	<h:panelGroup id="interestedPartyResults">
+	
+		<ui:fragment rendered="#{basket.searchPartyType ne null and basket.partyType.size() eq 0}">
+		<div class="col-md-12">  
+				<span  style="color: #fd2d2d; font-size:9px;"><span class="pull-left">
+					Search yielded 0 exisitng Interested Parties 
+					</span></span>
+		</div>
+		
+		</ui:fragment>
+		<ui:fragment rendered="#{basket.searchPartyType ne null and basket.partyType.size() gt 0}">
+			<span style="color: #202020; font-size:9px;"><span class="pull-left">
+			Search yielded #{basket.partyType.size()} existing Interested Parties. Please select the correct Party
+			</span></span>
+		</ui:fragment>
+		
+	 <ui:fragment rendered="#{basket.searchPartyType ne null and basket.partyType.size() gt 0}">
+	    
+		<h:dataTable value="#{basket.partyType}" var="interestedParty"   styleClass="table table-condensed table-striped-header table-striped table-hover table-header-blue-cs first-th-subheader">
+	  			<h:column> <f:facet name="header" class="interested-prty">Name</f:facet>
+	  				
+	  				<ui:fragment rendered="#{basket.searchPartyType.formTypeOfClient == 'F-I'}">
+		                <h:commandLink value="#{interestedParty.surname} #{interestedParty.firstName}" action="accept_interestedParty" render="intPartiesOnVehicle" >
+		  					<f:setPropertyActionListener target="#{flowScope.vehicle}" value="#{vehSel}" />
+							<f:setPropertyActionListener target="#{flowScope.ipSelected}" value="#{interestedParty}"/>
+							<f:ajax/>
+								</h:commandLink>
+	                </ui:fragment>
+                     
+	  				<ui:fragment rendered="#{basket.searchPartyType.formTypeOfClient != 'F-I'}">
+	  				<h:commandLink value="#{interestedParty.surname}" action="accept_interestedParty" render="intPartiesOnVehicle" >
+	  					<f:setPropertyActionListener target="#{flowScope.vehicle}" value="#{vehSel}" />
+						<f:setPropertyActionListener target="#{flowScope.ipSelected}" value="#{interestedParty}"/>
+						<f:ajax/>
+					</h:commandLink>
+					 </ui:fragment>
+	  			</h:column>
+	  			<h:column>	<f:facet name="header">Address</f:facet>#{interestedParty.address.streetNo} #{interestedParty.address.street} #{common_mapping_service.getUiValuesByKeyAndCodeAndState('addressInd',interestedParty.address.addrInd1,'IL')} #{interestedParty.address.addrNo1}</h:column>
+	  			<h:column>	<f:facet name="header">City</f:facet>#{interestedParty.address.city}</h:column>
+	  			<h:column>	<f:facet name="header">State</f:facet>#{interestedParty.address.state}</h:column>
+	  			<h:column>	<f:facet name="header">Zipcode</f:facet>#{interestedParty.address.postCode}</h:column>
+		</h:dataTable>
+	  
+	</ui:fragment>
+    	  
+	<ui:fragment rendered="#{basket.searchPartyType ne null and (basket.partyType.size() gt 0 or basket.partyType.size() eq 0)}">
+	<div class="col-md-12">
+			<span class="mycomp-label"> </span><br/>
+			</div>
+	<div class="row">
+	<div class="col-md-12">
+		<div class="col-md-3">
+		<h:commandLink  styleClass=" btn-sm btn btn-primary btn-block"  value="Party Not Listed" action="partyNotListed"  render="ipAddressDetails" immediate="true">
+				<f:setPropertyActionListener target="#{flowScope.vehicle}" value="#{vehSel}" />
+				<f:setPropertyActionListener target="#{flowScope.ipSelected}" value="#{basket.searchPartyType}"/>
+		</h:commandLink>
+		</div>
+		<div class="col-md-3">
+		<h:commandLink styleClass=" btn-sm btn btn-primary btn-block"  value="New Search" action="cancelInterestedParty" immediate="true">
+				<f:setPropertyActionListener target="#{flowScope.vehicle}" value="#{vehSel}" />
+				<f:setPropertyActionListener target="#{flowScope.ipSelected}" value="#{basket.searchPartyType}"/>
+		</h:commandLink>
+	</div>
+	</div>
+	</div>
+	<div class="col-md-12">
+			<span class="mycomp-label"> </span><br/>
+	</div>
+	</ui:fragment>
+	
+	</h:panelGroup>
+	
+	<h:panelGroup id="ipAddressDetails">
+		<ui:fragment rendered="#{basket.ipAction eq 'editIp' or basket.ipAction eq 'addIp'}">
+		<ui:fragment rendered="#{basket.ipAction eq 'addIp'}">
+				<div class="col-md-12">
+				<ui:include src="mailingAddress.xhtml">
+	             	 <ui:param name="addr" value="#{basket.interestedPartyAddress}" />
+	             	 <ui:param name="addrType" value="IPA" />
+	             	  <ui:param name="formName" value="vehicleList" />
+	          	</ui:include>
+	          	</div>
+	        </ui:fragment>
+	        <ui:fragment rendered="#{basket.ipAction eq 'editIp'}">
+	      	 <div class="col-md-12">
+	      	<b> #{vehicleDisplayService.decodeIpType(basket.searchPartyType)} </b> - 
+	      	 <ui:fragment rendered="#{basket.searchPartyType.formTypeOfClient != 'F-I'}">
+	      	 <b> Company Name: </b> #{basket.searchPartyType.surname}
+	      	 </ui:fragment>
+	      	 
+	      	 <ui:fragment rendered="#{basket.searchPartyType.formTypeOfClient == 'F-I'}">
+	      	<b> Name: </b> #{basket.searchPartyType.surname} #{basket.searchPartyType.firstName}
+	      	 </ui:fragment>
+	      	<span class="mycomp-label">   </span>
+	      	  <b> Address: </b>
+	      	        #{basket.interestedPartyAddress.streetNo} #{basket.interestedPartyAddress.street} 
+			        #{common_mapping_service.getUiValuesByKeyAndCodeAndState('addressInd',basket.interestedPartyAddress.addrInd1,'IL')} #{basket.interestedPartyAddress.addrNo1}  
+			        #{basket.interestedPartyAddress.city}   #{basket.interestedPartyAddress.state} 
+			        #{basket.interestedPartyAddress.postCode} 
+			      </div>
+			      <span class="mycomp-label"> </span><br/>
+	        </ui:fragment>
+	          	<div class="row">
+					<div class="col-md-12">
+					<ui:fragment rendered="#{basket.searchPartyType.formTypeOfClient eq 'L' or basket.searchPartyType.formTypeOfClient eq 'T' }">
+						<div class="col-md-1">
+                    		<label>Print: </label>
+                    	</div>
+                    <div class="col-md-3">
+	                    <h:selectOneMenu  id="ipPrint" 
+	                          		value="#{basket.searchPartyType.print}" tabindex="1" label="print"  >
+	                      		<f:selectItems itemLabel="#{entry[1]}" itemValue="#{entry[0]}"
+						                          value="#{common_mapping_service.getUiValuesByMappingKey('ipPrint')}" var="entry"/>
+						  	<f:ajax />
+						</h:selectOneMenu>
+					</div>
+					</ui:fragment>
+					<div class="col-md-2">
+               			<label for="ipRefNo">Reference No: </label>
+               		</div>
+               		<div class="col-md-3">
+                 		 <mycomp:inputText id="ipRefNum" value="#{basket.searchPartyType.refNo}" label="refNum" trim="true" upper="true" 
+                 		 size="50" maxlength="25">
+		                  <f:ajax/>
+		                  </mycomp:inputText>
+		            </div>
+		         	</div>
+		        </div>
+        		<div class="row">
+					<div class="col-md-12">
+					<div class="col-md-2">
+			 			<h:commandLink styleClass="btn btn-xs btn-success" value="Save " title="Save Intersted Party" action="saveInterestedParty" immediate="true">
+			 					<f:setPropertyActionListener target="#{flowScope.vehicle}" value="#{vehSel}" />
+			 					<f:setPropertyActionListener target="#{flowScope.ipSelected}" value="#{basket.searchPartyType}"/>
+			 					<i class="fa fa-floppy-o lookup-fa" aria-hidden="true" title="click to Intersted Party"></i>
+			 			</h:commandLink>
+			 			</div>
+			 			<div class="col-md-2">
+						<h:commandLink styleClass="btn btn-xs btn-danger"  value="Cancel " title="Cancel Intersted Party" action="cancelInterestedParty" immediate="true">
+							<f:setPropertyActionListener target="#{flowScope.vehicle}" value="#{vehSel}" />
+							<f:setPropertyActionListener target="#{flowScope.ipSelected}" value="#{basket.searchPartyType}"/>
+							<i class="fa fa-times lookup-fa" aria-hidden="true" title="Cancel Intersted Party"></i>
+						</h:commandLink>
+					</div>
+					</div>
+				</div>
+				<div class="col-md-12">
+				<span class="mycomp-label"> </span><br/>
+				</div>
+		</ui:fragment>
+	</h:panelGroup>
+	
+	
+</ui:composition>
