@@ -1,17 +1,21 @@
 package info.sanaulla.dal;
 
-import info.sanaulla.models.Book;
-import org.junit.BeforeClass;
-import org.junit.Test;
-
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import java.util.Arrays;
 import java.util.List;
 
+import org.junit.BeforeClass;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.runners.MockitoJUnitRunner;
 
+import info.sanaulla.models.Book;
+
+@RunWith(MockitoJUnitRunner.class)
 public class BookDALTest {
 
   private static BookDAL mockedBookDAL;
