@@ -1,0 +1,15 @@
+Manifest-Version: 1.0
+Implementation-Title: aaaDriveRest
+Major-Version: 0.0.1-SNAPSHOT
+Implementation-Version: 0.0.1-SNAPSHOT
+Built-By: Sravanthi
+Implementation-Vendor-Id: com.acg
+SVN-Path: 
+Implementation-Vendor: Pivotal Software, Inc.
+Build-Time: 2017-05-24T00:57:27Z
+Build-Jdk: 1.8.0_112
+Implementation-URL: http://projects.spring.io/spring-boot/aaaDriveRest
+ /
+Build-Version: 
+Created-By: Maven Integration for Eclipse
+
