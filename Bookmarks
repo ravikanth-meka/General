@@ -1,0 +1,484 @@
+{
+   "checksum": "305db43d34598e57bc199962600bde46",
+   "roots": {
+      "bookmark_bar": {
+         "children": [ {
+            "children": [ {
+               "date_added": "13130894058462137",
+               "id": "33",
+               "name": "AngularJS Promises - The Definitive Guide",
+               "type": "url",
+               "url": "http://www.dwmkerr.com/promises-in-angularjs-the-definitive-guide/"
+            }, {
+               "date_added": "13131127660068963",
+               "id": "40",
+               "name": "To then() or to success() in AngularJS - Peterbe.com",
+               "type": "url",
+               "url": "https://www.peterbe.com/plog/promises-with-$http"
+            }, {
+               "date_added": "13149018357711917",
+               "id": "87",
+               "meta_info": {
+                  "last_visited_desktop": "13149139868533048"
+               },
+               "name": "Top 50 AngularJS Interview Questions And Answers",
+               "type": "url",
+               "url": "http://www.c-sharpcorner.com/article/top-50-angularjs-interview-questions-and-answers/"
+            }, {
+               "date_added": "13150699697809975",
+               "id": "96",
+               "meta_info": {
+                  "last_visited_desktop": "13150699697810380"
+               },
+               "name": "Top 7 Ways to Debug Angular 4 Apps - YouTube",
+               "type": "url",
+               "url": "https://www.youtube.com/watch?v=gxixM90vo9Y"
+            } ],
+            "date_added": "13149016523227308",
+            "date_modified": "13150788218752953",
+            "id": "82",
+            "name": "AngularJS",
+            "type": "folder"
+         }, {
+            "children": [ {
+               "date_added": "13148971647724764",
+               "id": "68",
+               "meta_info": {
+                  "last_visited_desktop": "13148971647725652"
+               },
+               "name": "Bitcoin",
+               "type": "url",
+               "url": "https://www.bitcoinmining.com/getting-started/"
+            }, {
+               "date_added": "13148972009121281",
+               "id": "70",
+               "meta_info": {
+                  "last_visited_desktop": "13148972009122406"
+               },
+               "name": "What is a Bitcoin Mining Pool?",
+               "type": "url",
+               "url": "https://www.coindesk.com/information/get-started-mining-pools/"
+            }, {
+               "date_added": "13148972035477936",
+               "id": "71",
+               "meta_info": {
+                  "last_visited_desktop": "13148972035479188"
+               },
+               "name": "Download - Bitcoin",
+               "type": "url",
+               "url": "https://bitcoin.org/en/download"
+            }, {
+               "date_added": "13148972464989120",
+               "id": "72",
+               "meta_info": {
+                  "last_visited_desktop": "13148972464989834"
+               },
+               "name": "Running A Full Node - Bitcoin",
+               "type": "url",
+               "url": "https://bitcoin.org/en/full-node#costs-and-warnings"
+            }, {
+               "date_added": "13148973600746902",
+               "id": "73",
+               "meta_info": {
+                  "last_visited_desktop": "13148973600747966"
+               },
+               "name": "A Step by Step Guide to Firing Up Your Own Bitcoin Node",
+               "type": "url",
+               "url": "https://99bitcoins.com/step-by-step-guide-firing-up-bitcoin-node/"
+            } ],
+            "date_added": "13148971687444016",
+            "date_modified": "13148974227543129",
+            "id": "69",
+            "name": "Bitcoin",
+            "type": "folder"
+         }, {
+            "children": [ {
+               "date_added": "13149016397360398",
+               "id": "75",
+               "meta_info": {
+                  "last_visited_desktop": "13150788274813168"
+               },
+               "name": "Hibernate Second-Level Cache | Baeldung",
+               "type": "url",
+               "url": "http://www.baeldung.com/hibernate-second-level-cache"
+            } ],
+            "date_added": "13149016418285373",
+            "date_modified": "13149016464945836",
+            "id": "77",
+            "name": "Hibernate",
+            "type": "folder"
+         }, {
+            "children": [ {
+               "date_added": "13125902892306325",
+               "id": "9",
+               "meta_info": {
+                  "last_visited_desktop": "13149139797526117"
+               },
+               "name": "Java Platform Standard Edition 8 Documentation",
+               "type": "url",
+               "url": "http://docs.oracle.com/javase/8/docs/"
+            } ],
+            "date_added": "13149016576527574",
+            "date_modified": "13149016582486262",
+            "id": "86",
+            "name": "Java",
+            "type": "folder"
+         }, {
+            "children": [ {
+               "date_added": "13131127595001152",
+               "id": "39",
+               "name": "How to Generate Out Of Memory (OOM) in Java Programatically • Crunchify",
+               "type": "url",
+               "url": "http://crunchify.com/how-to-generate-out-of-memory-oom-in-java-programatically/"
+            } ],
+            "date_added": "13149016540293696",
+            "date_modified": "13149016568205214",
+            "id": "84",
+            "name": "Memory",
+            "type": "folder"
+         }, {
+            "children": [ {
+               "date_added": "13148950527380754",
+               "id": "66",
+               "meta_info": {
+                  "last_visited_desktop": "13148950527382321"
+               },
+               "name": "Tutorial · Spring Boot and OAuth2",
+               "type": "url",
+               "url": "https://spring.io/guides/tutorials/spring-boot-oauth2/"
+            }, {
+               "date_added": "13148974227543129",
+               "id": "74",
+               "meta_info": {
+                  "last_visited_desktop": "13148974227543701"
+               },
+               "name": "Tutorial · Spring Boot and OAuth2",
+               "type": "url",
+               "url": "https://spring.io/guides/tutorials/spring-boot-oauth2/#_social_login_authserver"
+            } ],
+            "date_added": "13148950579912494",
+            "date_modified": "13149016397360398",
+            "id": "67",
+            "name": "OAuth2",
+            "type": "folder"
+         }, {
+            "children": [  ],
+            "date_added": "13149016485832779",
+            "date_modified": "13149016485832780",
+            "id": "80",
+            "name": "Security",
+            "type": "folder"
+         }, {
+            "children": [ {
+               "date_added": "13131126834236866",
+               "id": "36",
+               "name": "3. Spring Integration Overview",
+               "type": "url",
+               "url": "http://docs.spring.io/spring-integration/reference/html/overview.html"
+            }, {
+               "date_added": "13130894054095662",
+               "id": "32",
+               "name": "6. Executing actions",
+               "type": "url",
+               "url": "http://docs.spring.io/autorepo/docs/webflow/2.4.0.RELEASE/reference/html/actions.html"
+            }, {
+               "date_added": "13130876209362466",
+               "id": "30",
+               "name": "2. Spring Configuration",
+               "type": "url",
+               "url": "http://www.springbyexample.org/examples/simple-spring-web-flow-webapp-spring-config.html"
+            }, {
+               "date_added": "13131134303192020",
+               "id": "44",
+               "name": "spring boot - How to implement an asynchronous REST request to a controller using Springboot? - Stack Overflow",
+               "type": "url",
+               "url": "http://stackoverflow.com/questions/28908229/how-to-implement-an-asynchronous-rest-request-to-a-controller-using-springboot"
+            }, {
+               "date_added": "13131517784626126",
+               "id": "47",
+               "name": "Spring Boot Vs Spring MVC - A Comparison - YouTube",
+               "type": "url",
+               "url": "https://www.youtube.com/watch?v=ILRmPKEL4U0"
+            }, {
+               "date_added": "13131563002435764",
+               "id": "49",
+               "name": "Spring Web Flow Tutorial | Examples Java Code Geeks - 2017",
+               "type": "url",
+               "url": "https://examples.javacodegeeks.com/enterprise-java/spring/web-flow/spring-web-flow-tutorial/"
+            }, {
+               "date_added": "13130873861309833",
+               "id": "29",
+               "name": "Spring Webflow Example with Diagram",
+               "type": "url",
+               "url": "http://www.studytrails.com/frameworks/spring/spring-web-flow/"
+            }, {
+               "date_added": "13130872251526104",
+               "id": "27",
+               "name": "spring - BeanFactory vs ApplicationContext - Stack Overflow",
+               "type": "url",
+               "url": "http://stackoverflow.com/questions/243385/beanfactory-vs-applicationcontext"
+            } ],
+            "date_added": "13149016472757778",
+            "date_modified": "13149018357711917",
+            "id": "79",
+            "name": "Spring",
+            "type": "folder"
+         }, {
+            "children": [ {
+               "date_added": "13131133986352514",
+               "id": "43",
+               "name": "Asynchronous REST results in Spring",
+               "type": "url",
+               "url": "http://niels.nu/blog/2016/spring-async-rest.html"
+            }, {
+               "date_added": "13130873244753153",
+               "id": "28",
+               "name": "Difference between SOAP and REST web services in java - Java tutorial for beginners",
+               "type": "url",
+               "url": "http://www.java2blog.com/2016/06/difference-between-soap-and-rest-web-services.html"
+            }, {
+               "date_added": "13131562119921457",
+               "id": "48",
+               "name": "Creating a Simple Web Service and Clients with JAX-WS - The Java EE 6 Tutorial",
+               "type": "url",
+               "url": "http://docs.oracle.com/javaee/6/tutorial/doc/bnayn.html"
+            }, {
+               "date_added": "13131133042065521",
+               "id": "41",
+               "name": "Asynchronous processing of RESTful web services requests in Spring and Java EE worlds wrapped in Docker – part 1: Spring",
+               "type": "url",
+               "url": "http://spiral-architect.pl/2016/04/25/asynchronous-processing-of-restful-web-services-requests-in-spring-and-java-ee-worlds-wrapped-in-docker-part-1-spring/"
+            }, {
+               "date_added": "13131133395747337",
+               "id": "42",
+               "name": "How do I let users log into my RESTful API? - The RESTful cookbook",
+               "type": "url",
+               "url": "http://restcookbook.com/Basics/loggingin/"
+            }, {
+               "date_added": "13131127107119980",
+               "id": "37",
+               "name": "HTTP Status Codes",
+               "type": "url",
+               "url": "http://www.restapitutorial.com/httpstatuscodes.html"
+            }, {
+               "date_added": "13131146332374410",
+               "id": "45",
+               "name": "Java Tutorial: How to Create RESTful Java Client using Apache HttpClient – Example • Crunchify",
+               "type": "url",
+               "url": "http://crunchify.com/how-to-create-restful-java-client-using-apache-httpclient-example/"
+            }, {
+               "date_added": "13130518245528270",
+               "id": "19",
+               "name": "3 Understanding Web Service Security Concepts",
+               "type": "url",
+               "url": "https://docs.oracle.com/middleware/1212/owsm/OWSMC/owsm-security-concepts.htm#OWSMC1508"
+            }, {
+               "date_added": "13130452573959389",
+               "id": "16",
+               "name": "3 Understanding Web Service Security Concepts",
+               "type": "url",
+               "url": "https://docs.oracle.com/middleware/1212/owsm/OWSMC/owsm-security-concepts.htm#OWSMC2342"
+            }, {
+               "date_added": "13130526104634060",
+               "id": "20",
+               "name": "REST vs SOAP, the difference between soap and rest - spf13.com",
+               "type": "url",
+               "url": "http://spf13.com/post/soap-vs-rest"
+            }, {
+               "date_added": "13130608219960174",
+               "id": "23",
+               "name": "RESTful Web services: The basics",
+               "type": "url",
+               "url": "http://www.ibm.com/developerworks/library/ws-restful/"
+            }, {
+               "date_added": "13130609600512193",
+               "id": "24",
+               "name": "SOAP Header",
+               "type": "url",
+               "url": "http://tutorials.jenkov.com/soap/header.html"
+            }, {
+               "date_added": "13130450375052609",
+               "id": "15",
+               "name": "Understanding SOAP and REST Basics And Differences",
+               "type": "url",
+               "url": "http://blog.smartbear.com/apis/understanding-soap-and-rest-basics/"
+            }, {
+               "date_added": "13131073299681127",
+               "id": "34",
+               "name": "web services - REST API error return good practices - Stack Overflow",
+               "type": "url",
+               "url": "http://stackoverflow.com/questions/942951/rest-api-error-return-good-practices"
+            }, {
+               "date_added": "13130534441653554",
+               "id": "22",
+               "name": "Web Services Interview Questions",
+               "type": "url",
+               "url": "https://www.tutorialspoint.com/webservices/webservices_interview_questions.htm"
+            }, {
+               "date_added": "13131127177955563",
+               "id": "38",
+               "name": "What is REST?",
+               "type": "url",
+               "url": "http://www.restapitutorial.com/lessons/whatisrest.html"
+            }, {
+               "date_added": "13130532608580847",
+               "id": "21",
+               "name": "why create a web service",
+               "type": "url",
+               "url": "http://www.vkinfotek.com/webservice/whycreatewebservice.html"
+            }, {
+               "date_added": "13148868108977878",
+               "id": "65",
+               "meta_info": {
+                  "last_visited_desktop": "13148868108978760"
+               },
+               "name": "Rest API's - Public",
+               "type": "url",
+               "url": "https://apigee.com/providers"
+            } ],
+            "date_added": "13149016506050670",
+            "date_modified": "13150788481515427",
+            "id": "81",
+            "name": "Webservices",
+            "type": "folder"
+         }, {
+            "children": [ {
+               "date_added": "13150788218752953",
+               "id": "99",
+               "meta_info": {
+                  "last_visited_desktop": "13150788218753473"
+               },
+               "name": "spring-security-oauth/OAuth2AuthenticationManager.java at master · spring-projects/spring-security-oauth · GitHub",
+               "type": "url",
+               "url": "https://github.com/spring-projects/spring-security-oauth/blob/master/spring-security-oauth2/src/main/java/org/springframework/security/oauth2/provider/authentication/OAuth2AuthenticationManager.java"
+            } ],
+            "date_added": "13150788241467577",
+            "date_modified": "13150788241467687",
+            "id": "100",
+            "name": "Spring Security",
+            "type": "folder"
+         }, {
+            "date_added": "13129954679256559",
+            "id": "12",
+            "meta_info": {
+               "last_visited_desktop": "13146515637452536"
+            },
+            "name": "Free Online Books | Wilbooks News",
+            "type": "url",
+            "url": "http://www.wilbooks.com/free-resources/free-online-books/"
+         }, {
+            "date_added": "13131492755704792",
+            "id": "46",
+            "name": "GitHub - in28minutes/SpringIn28Minutes: Spring Tutorial For Beginners",
+            "type": "url",
+            "url": "https://github.com/in28minutes/SpringIn28Minutes"
+         }, {
+            "date_added": "13130886925985544",
+            "id": "31",
+            "name": "Green Card Status",
+            "type": "url",
+            "url": "https://lcr-pjr.doleta.gov/index.cfm?event=ehlcjrexternal.dsplcrlanding"
+         }, {
+            "date_added": "13131563332517584",
+            "id": "50",
+            "meta_info": {
+               "last_visited_desktop": "13150697470552634"
+            },
+            "name": "in28minutes - YouTube",
+            "type": "url",
+            "url": "https://www.youtube.com/user/rithustutorials/playlists"
+         }, {
+            "date_added": "13125044637857210",
+            "id": "6",
+            "name": "MongoDB",
+            "type": "url",
+            "url": "https://www.youtube.com/watch?v=XqfkhbC3rT8&list=PLGOsbT2r-iglgXCeBmwK-AwQ30Sx3RVrr&index=14"
+         }, {
+            "date_added": "13148359546737713",
+            "id": "62",
+            "name": "New Tab",
+            "type": "url",
+            "url": "chrome://newtab/"
+         }, {
+            "date_added": "13131126812568673",
+            "id": "35",
+            "name": "Open source Java projects: Spring Integration | JavaWorld",
+            "type": "url",
+            "url": "http://www.javaworld.com/article/2142107/spring-framework/open-source-java-projects-spring-integration.html"
+         }, {
+            "date_added": "13146409476240778",
+            "id": "59",
+            "meta_info": {
+               "last_visited_desktop": "13146409476241227"
+            },
+            "name": "qlink - Google Search",
+            "type": "url",
+            "url": "https://www.google.com/search?q=qlink&rlz=1C1CHBF_enUS721US721&oq=ql&aqs=chrome.1.69i57j0l5.3952j0j7&sourceid=chrome&ie=UTF-8"
+         }, {
+            "date_added": "13131874277766960",
+            "id": "56",
+            "name": "Roommates, Roomate finder - Roommates.com - The Roomate Service",
+            "type": "url",
+            "url": "https://www.roommates.com/get_started.rs"
+         }, {
+            "date_added": "13131874042195814",
+            "id": "55",
+            "name": "Rooms for Rent, Roommates in Cedar Park, TX - Claz.org",
+            "type": "url",
+            "url": "https://cedarpark.claz.org/classifieds/housing/for-rent/rooms"
+         }, {
+            "date_added": "13131865913265567",
+            "id": "52",
+            "name": "Sysinternals Miscellaneous Utilities",
+            "type": "url",
+            "url": "https://technet.microsoft.com/en-us/sysinternals/bb842059"
+         }, {
+            "date_added": "13131864958748674",
+            "id": "51",
+            "name": "You searched for windows apps - Digital Inspiration",
+            "type": "url",
+            "url": "https://www.labnol.org/?s=windows+apps"
+         }, {
+            "date_added": "13149741738646563",
+            "id": "90",
+            "meta_info": {
+               "last_visited_desktop": "13149741738646971"
+            },
+            "name": "Learn To Play Piano Instantly: #1 Beginning Training (Instant Piano Genius) — Learn Piano Online Fast: Piano Genius .com",
+            "type": "url",
+            "url": "http://www.pianogenius.com/"
+         }, {
+            "date_added": "13149918307425972",
+            "id": "93",
+            "meta_info": {
+               "last_visited_desktop": "13149918570986735"
+            },
+            "name": "NeuroBot - We create a perfect trader!",
+            "type": "url",
+            "url": "https://neurobot.ws/predicts/show_predict/ltc/84"
+         } ],
+         "date_added": "13125040140589393",
+         "date_modified": "13150788486174904",
+         "id": "1",
+         "name": "Bookmarks bar",
+         "type": "folder"
+      },
+      "other": {
+         "children": [  ],
+         "date_added": "13125040140589398",
+         "date_modified": "0",
+         "id": "2",
+         "name": "Other bookmarks",
+         "type": "folder"
+      },
+      "synced": {
+         "children": [  ],
+         "date_added": "13125040140589400",
+         "date_modified": "0",
+         "id": "3",
+         "name": "Mobile bookmarks",
+         "type": "folder"
+      }
+   },
+   "version": 1
+}
